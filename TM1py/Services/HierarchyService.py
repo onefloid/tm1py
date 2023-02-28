@@ -27,7 +27,7 @@ class HierarchyService(ObjectService):
         self.subsets = SubsetService(rest)
         self.elements = ElementService(rest)
 
-    def create(self, hierarchy: Hierarchy, **kwargs):
+    def create(self, hierarchy: Hierarchy, update_attributes_with_ti=True, **kwargs):
         """ Create a hierarchy in an existing dimension
 
         :param hierarchy:
@@ -36,7 +36,7 @@ class HierarchyService(ObjectService):
         url = format_url("/api/v1/Dimensions('{}')/Hierarchies", hierarchy.dimension_name)
         response = self._rest.POST(url, hierarchy.body, **kwargs)
 
-        self.update_element_attributes(hierarchy, **kwargs)
+        self.update_element_attributes(hierarchy, use_ti=update_attributes_with_ti, **kwargs)
 
         return response
 
@@ -64,7 +64,7 @@ class HierarchyService(ObjectService):
         response = self._rest.GET(url, **kwargs)
         return [hierarchy["Name"] for hierarchy in response.json()["value"]]
 
-    def update(self, hierarchy: Hierarchy, **kwargs) -> List[Response]:
+    def update(self, hierarchy: Hierarchy, update_attributes_with_ti=True, **kwargs) -> List[Response]:
         """ update a hierarchy. It's a two step process: 
         1. Update Hierarchy
         2. Update Element-Attributes
@@ -86,7 +86,9 @@ class HierarchyService(ObjectService):
         responses.append(self._rest.PATCH(url, json.dumps(hierarchy_body), **kwargs))
 
         # 2. Update Attributes
-        responses.append(self.update_element_attributes(hierarchy=hierarchy, **kwargs))
+        responses.append(self.update_element_attributes(
+            hierarchy=hierarchy,
+            use_ti=update_attributes_with_ti, **kwargs))
 
         # Workaround EDGES
         if self.version[0:8] in self.EDGES_WORKAROUND_VERSIONS:
@@ -141,7 +143,7 @@ class HierarchyService(ObjectService):
                 for hierarchy_property
                 in hierarchy_properties}
 
-    def update_element_attributes(self, hierarchy: Hierarchy, **kwargs):
+    def update_element_attributes(self, hierarchy: Hierarchy, use_ti=False, **kwargs):
         """ Update the elementattributes of a hierarchy
 
         :param hierarchy: Instance of TM1py.Hierarchy
@@ -178,6 +180,7 @@ class HierarchyService(ObjectService):
                 dimension_name=hierarchy.dimension_name,
                 hierarchy_name=hierarchy.name,
                 element_attribute=element_attribute,
+                use_ti=use_ti,
                 **kwargs)
 
         for element_attribute in attributes_to_delete:
@@ -197,6 +200,7 @@ class HierarchyService(ObjectService):
                 dimension_name=hierarchy.dimension_name,
                 hierarchy_name=hierarchy.name,
                 element_attribute=element_attribute,
+                use_ti=use_ti,
                 **kwargs)
 
     def get_default_member(self, dimension_name: str, hierarchy_name: str = None, **kwargs) -> Optional[str]:

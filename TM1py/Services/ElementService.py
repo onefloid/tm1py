@@ -644,7 +644,7 @@ class ElementService(ObjectService):
         return [elem[0]["Name"] for elem in elems]
 
     def create_element_attribute(self, dimension_name: str, hierarchy_name: str, element_attribute: ElementAttribute,
-                                 **kwargs) -> Response:
+                                 use_ti=False, **kwargs) -> Response:
         """ like AttrInsert
 
         :param dimension_name:
@@ -652,6 +652,13 @@ class ElementService(ObjectService):
         :param element_attribute: instance of TM1py.ElementAttribute
         :return:
         """
+        if use_ti:
+            process_service = self._get_process_service()
+
+            attribute_name = element_attribute.name
+            attribute_type = element_attribute.attribute_type[0] # A, S, N
+            code = f"AttrInsert('{dimension_name}', '', '{attribute_name}', '{attribute_type}');"
+            process_service.execute_ti_code(code)
         url = format_url(
             "/api/v1/Dimensions('{}')/Hierarchies('{}')/ElementAttributes",
             dimension_name,
@@ -993,11 +1000,11 @@ class ElementService(ObjectService):
     @require_admin
     def _element_is_ancestor_ti(self, dimension_name: str, hierarchy_name: str, element_name: str,
                                 ancestor_name: str) -> bool:
-        process_service = self.get_process_service()
+        process_service = self._get_process_service()
         code = f"ElementIsAncestor('{dimension_name}', '{hierarchy_name}', '{ancestor_name}', '{element_name}')=1"
         return process_service.evaluate_boolean_ti_expression(code)
 
-    def get_process_service(self):
+    def _get_process_service(self):
         from TM1py import ProcessService
         return ProcessService(self._rest)
 

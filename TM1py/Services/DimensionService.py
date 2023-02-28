@@ -25,7 +25,7 @@ class DimensionService(ObjectService):
         self.hierarchies = HierarchyService(rest)
         self.subsets = SubsetService(rest)
 
-    def create(self, dimension: Dimension, **kwargs) -> Response:
+    def create(self, dimension: Dimension, update_attributes_with_ti=True, **kwargs) -> Response:
         """ Create a dimension
 
         :param dimension: instance of TM1py.Dimension
@@ -42,7 +42,7 @@ class DimensionService(ObjectService):
             # Create ElementAttributes
             for hierarchy in dimension:
                 if not case_and_space_insensitive_equals(hierarchy.name, "Leaves"):
-                    self.hierarchies.update_element_attributes(hierarchy, **kwargs)
+                    self.hierarchies.update_element_attributes(hierarchy, use_ti=update_attributes_with_ti, **kwargs)
         except TM1pyException as e:
             # undo everything if problem in step 1 or 2
             if self.exists(dimension.name, **kwargs):
@@ -60,7 +60,7 @@ class DimensionService(ObjectService):
         response = self._rest.GET(url, **kwargs)
         return Dimension.from_json(response.text)
 
-    def update(self, dimension: Dimension, **kwargs):
+    def update(self, dimension: Dimension, update_attributes_with_ti=True, **kwargs):
         """ Update an existing dimension
 
         :param dimension: instance of TM1py.Dimension
@@ -76,9 +76,9 @@ class DimensionService(ObjectService):
         for hierarchy in dimension:
             if not case_and_space_insensitive_equals(hierarchy.name, "Leaves"):
                 if self.hierarchies.exists(hierarchy.dimension_name, hierarchy.name, **kwargs):
-                    self.hierarchies.update(hierarchy, **kwargs)
+                    self.hierarchies.update(hierarchy, update_attributes_with_ti=update_attributes_with_ti, **kwargs)
                 else:
-                    self.hierarchies.create(hierarchy, **kwargs)
+                    self.hierarchies.create(hierarchy, update_attributes_with_ti=update_attributes_with_ti, **kwargs)
 
         # Edge case: elements in leaves hierarchy that do not exist in other hierarchies
         if "Leaves" in dimension:
@@ -100,16 +100,16 @@ class DimensionService(ObjectService):
             if not case_and_space_insensitive_equals(hierarchy_name, "Leaves"):
                 self.hierarchies.delete(dimension_name=dimension.name, hierarchy_name=hierarchy_name, **kwargs)
 
-    def update_or_create(self, dimension: Dimension, **kwargs):
+    def update_or_create(self, dimension: Dimension, update_attributes_with_ti=True, **kwargs):
         """ update if exists else create
 
         :param dimension:
         :return:
         """
         if self.exists(dimension_name=dimension.name, **kwargs):
-            self.update(dimension=dimension, **kwargs)
+            self.update(dimension=dimension, update_attributes_with_ti=update_attributes_with_ti, **kwargs)
         else:
-            self.create(dimension=dimension, **kwargs)
+            self.create(dimension=dimension, update_attributes_with_ti=update_attributes_with_ti, **kwargs)
 
     def delete(self, dimension_name: str, **kwargs) -> Response:
         """ Delete a dimension
