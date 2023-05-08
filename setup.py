@@ -12,7 +12,7 @@ setup(
     name='TM1py',
     packages=['TM1py', 'TM1py/Exceptions', 'TM1py/Objects', 'TM1py/Services', 'TM1py/Utils'],
     version=SCHEDULE_VERSION,
-    description='A python module for TM1.',
+    description='A python module for TM1',
     long_description=long_description,
     long_description_content_type='text/markdown',
     license='MIT',
