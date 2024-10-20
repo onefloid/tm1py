@@ -55,33 +55,52 @@ class TestChoreService(unittest.TestCase):
         p2.add_parameter('pRegion', 'pRegion (String)', value='UK')
         cls.tm1.processes.update_or_create(p2)
 
+    def _create_or_update_chore(
+        self,
+        name: str,
+        active: bool = True,
+        dst_sensitivity: bool= True,
+        execution_mode: str = Chore.SINGLE_COMMIT,
+        start_time: ChoreStartTime = None,
+        frequency: ChoreFrequency = None,
+        tasks: list[ChoreTask] = None,
+    )->Chore:
+        # Set defaults
+        if start_time is None:
+            start_time = ChoreStartTime(
+                self.start_time.year,
+                self.start_time.month,
+                self.start_time.day,
+                self.start_time.hour,
+                self.start_time.minute,
+                self.start_time.second,
+            )
+        if frequency is None:
+            frequency = self.frequency
+
+        if tasks is None:
+            tasks = self.tasks
+
+        # Create chore
+        c = Chore(
+            name=name,
+            active=active,
+            dst_sensitivity = dst_sensitivity,
+            execution_mode=execution_mode,
+            start_time=start_time,
+            frequency=frequency,
+            tasks=tasks,
+        )
+
+        self.tm1.chores.update_or_create(c)
+
+        return c
+
     def setUp(self):
         # create chores
-        c1 = Chore(name=self.chore_name1,
-                   start_time=ChoreStartTime(self.start_time.year, self.start_time.month, self.start_time.day,
-                                             self.start_time.hour, self.start_time.minute, self.start_time.second),
-                   dst_sensitivity=True,
-                   active=True,
-                   execution_mode=Chore.MULTIPLE_COMMIT,
-                   frequency=self.frequency,
-                   tasks=self.tasks)
-        self.tm1.chores.update_or_create(c1)
-
-        c2 = Chore(name=self.chore_name2,
-                   start_time=ChoreStartTime(self.start_time.year, self.start_time.month, self.start_time.day,
-                                             self.start_time.hour, self.start_time.minute, self.start_time.second),
-                   dst_sensitivity=True,
-                   active=False,
-                   execution_mode=Chore.SINGLE_COMMIT,
-                   frequency=self.frequency,
-                   tasks=self.tasks)
-        self.tm1.chores.update_or_create(c2)
-
-        # chore without tasks
-        c3 = copy.copy(c2)
-        c3.name = self.chore_name3
-        c3.tasks = []
-        self.tm1.chores.update_or_create(c3)
+        self._create_or_update_chore(name=self.chore_name1, execution_mode=Chore.MULTIPLE_COMMIT)
+        self._create_or_update_chore(name=self.chore_name2, active=False)
+        self._create_or_update_chore(name=self.chore_name3, active=False, tasks=[])
 
     def tearDown(self):
         for chore_name in [self.chore_name1, self.chore_name2, self.chore_name3, self.chore_name4]:
@@ -90,17 +109,7 @@ class TestChoreService(unittest.TestCase):
 
     @skip_if_version_lower_than(version="11.7.00002.1")
     def test_create_chore_with_dst_multi_commit(self):
-        # create chores
-        c4 = Chore(name=self.chore_name4,
-                   start_time=ChoreStartTime(self.start_time.year, self.start_time.month, self.start_time.day,
-                                             self.start_time.hour, self.start_time.minute, self.start_time.second),
-                   dst_sensitivity=True,
-                   active=True,
-                   execution_mode=Chore.MULTIPLE_COMMIT,
-                   frequency=self.frequency,
-                   tasks=self.tasks)
-        self.tm1.chores.create(c4)
-
+        c4 = self._create_or_update_chore(name=self.chore_name4, execution_mode=Chore.MULTIPLE_COMMIT)
         c4 = self.tm1.chores.get(self.chore_name4)
 
         self.assertEqual(c4.start_time.datetime.hour, self.start_time.hour)
