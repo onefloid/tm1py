@@ -84,14 +84,9 @@ class TestChoreService(unittest.TestCase):
         self.tm1.chores.update_or_create(c3)
 
     def tearDown(self):
-        if self.tm1.chores.exists(self.chore_name1):
-            self.tm1.chores.delete(self.chore_name1)
-        if self.tm1.chores.exists(self.chore_name2):
-            self.tm1.chores.delete(self.chore_name2)
-        if self.tm1.chores.exists(self.chore_name3):
-            self.tm1.chores.delete(self.chore_name3)
-        if self.tm1.chores.exists(self.chore_name4):
-            self.tm1.chores.delete(self.chore_name4)
+        for chore_name in [self.chore_name1, self.chore_name2, self.chore_name3, self.chore_name4]:
+            if self.tm1.chores.exists(chore_name):
+                self.tm1.chores.delete(chore_name)
 
     @skip_if_version_lower_than(version="11.7.00002.1")
     def test_create_chore_with_dst_multi_commit(self):
