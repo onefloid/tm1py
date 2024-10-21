@@ -46,6 +46,19 @@ def _create_chore_object(
 
     return c
 
+def _create_and_manage_chore(tm1, constants, chore_name, **chore_kwargs):
+    c = _create_chore_object(
+        constants=constants,
+        name=chore_name,
+        **chore_kwargs
+    )
+    tm1.chores.update_or_create(c)
+
+    yield c
+
+    if tm1.chores.exists(chore_name):
+        tm1.chores.delete(chore_name)
+
 @pytest.fixture
 def constants():
     prefix = "TM1py_Tests_Chore_"
@@ -118,83 +131,36 @@ def process2(constants, tm1):
 
 @pytest.fixture
 def chore1(constants, tm1, process1):
-    tm1 = tm1
     chore_name = constants["chore_name1"]
-    c = _create_chore_object(
-        constants=constants,
-        name=chore_name,
-        execution_mode=Chore.MULTIPLE_COMMIT
+    yield from _create_and_manage_chore(
+        tm1, constants, chore_name, execution_mode=Chore.MULTIPLE_COMMIT
     )
-    tm1.chores.update_or_create(c)
-
-    yield c 
-
-    if tm1.chores.exists(chore_name):
-        tm1.chores.delete(chore_name)
 
 @pytest.fixture
 def chore2(constants, tm1, process1):
-    tm1 = tm1
     chore_name = constants["chore_name2"]
-    c = _create_chore_object(
-        constants=constants,
-        name=chore_name,
-        active=False
+    yield from _create_and_manage_chore(
+        tm1, constants, chore_name, active=False,
     )
-    tm1.chores.update_or_create(c)
-
-    yield c 
-
-    if tm1.chores.exists(chore_name):
-        tm1.chores.delete(chore_name)
 
 @pytest.fixture
-def chore3(constants, tm1):
-    tm1 = tm1
+def chore3(constants, tm1, process1):
     chore_name = constants["chore_name3"]
-    c = _create_chore_object(
-        constants=constants,
-        name=chore_name,
-        active=False,
-        tasks=[]
+    yield from _create_and_manage_chore(
+        tm1, constants, chore_name, active=False, tasks=[]
     )
-    tm1.chores.update_or_create(c)
-
-    yield c
-
-    if tm1.chores.exists(chore_name):
-        tm1.chores.delete(chore_name)
 
 @pytest.fixture
 def chore4(constants, tm1, process1):
-    tm1 = tm1
     chore_name = constants["chore_name4"]
-    c = _create_chore_object(
-        constants=constants,
-        name=chore_name,
-        execution_mode=Chore.MULTIPLE_COMMIT
+    yield from _create_and_manage_chore(
+        tm1, constants, chore_name, execution_mode=Chore.MULTIPLE_COMMIT
     )
-    tm1.chores.update_or_create(c)
-    
-    yield c
-
-    if tm1.chores.exists(chore_name):
-        tm1.chores.delete(chore_name)
 
 @pytest.fixture
 def chore5(constants, tm1, process1):
-    tm1 = tm1
     chore_name = constants["chore_name5"]
-    c = _create_chore_object(
-        constants=constants,
-        name=chore_name,
-    )
-    tm1.chores.update_or_create(c)
-    
-    yield c
-
-    if tm1.chores.exists(chore_name):
-        tm1.chores.delete(chore_name)
+    yield from _create_and_manage_chore(tm1, constants, chore_name)
 
 def test_get_chore_without_tasks(constants, tm1, chore3):
     c3 = tm1.chores.get(chore_name=constants["chore_name3"])
@@ -215,4 +181,3 @@ def test_get_all_names(constants, tm1, chore1, chore2, chore3, chore4, chore5):
     assert constants["chore_name3"] in all_chore_names
     assert constants["chore_name4"] in all_chore_names
     assert constants["chore_name5"] in all_chore_names
-
