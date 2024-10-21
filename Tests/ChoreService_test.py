@@ -3,6 +3,7 @@ import random
 import pytest
 from datetime import datetime
 from pathlib import Path
+from uuid import uuid1
 from TM1py.Objects import Chore, ChoreStartTime, ChoreFrequency, ChoreTask, Process
 from TM1py.Services import TM1Service
 
@@ -62,16 +63,17 @@ def _create_and_manage_chore(tm1, constants, chore_name, **chore_kwargs):
 @pytest.fixture
 def constants():
     prefix = "TM1py_Tests_Chore_"
-    process_name1 = prefix + 'Process1'
     frequency_days = int(random.uniform(0, 355))
     frequency_hours = int(random.uniform(0, 23))
     frequency_minutes = int(random.uniform(0, 59))
     frequency_seconds = int(random.uniform(0, 59))
-    chore_name1 = prefix + "Chore1"
-    chore_name2 = prefix + "Chore2"
-    chore_name3 = prefix + "Chore3"
-    chore_name4 = prefix + "Chore4"
-    chore_name5 = prefix + "Chore5"
+    test_uuid = str(uuid1()).replace('-', "_")
+    process_name1 = prefix + 'Process1_' + test_uuid
+    chore_name1 = prefix + "Chore1_" + test_uuid
+    chore_name2 = prefix + "Chore2_" + test_uuid
+    chore_name3 = prefix + "Chore3_" + test_uuid
+    chore_name4 = prefix + "Chore4_" + test_uuid
+    chore_name5 = prefix + "Chore5_" + test_uuid
 
     return {
         "process_name1": process_name1,
