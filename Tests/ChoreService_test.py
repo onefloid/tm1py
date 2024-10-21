@@ -193,3 +193,20 @@ def test_get_all_names(constants, tm1, chore1, chore2, chore3, chore4, chore5):
     all_chore_names = tm1.chores.get_all_names()
     for chore_name in constants["chore_names"]:
         assert chore_name in all_chore_names
+
+def test_get_chore1(constants, tm1, chore1):
+    c = tm1.chores.get(constants["chore_name1"])
+
+    assert c._start_time._datetime == constants["start_time"].replace(microsecond=0)
+    assert c._name == constants["chore_name1"]
+    assert c._name == constants["chore_name1"]
+    assert c.active is True
+    assert c._dst_sensitivity is True
+    assert c._execution_mode == Chore.MULTIPLE_COMMIT
+    assert c._frequency._days == str(constants["frequency_days"]).zfill(2)
+    assert c._frequency._hours == str(constants["frequency_hours"]).zfill(2)
+    assert c._frequency._minutes == str(constants["frequency_minutes"]).zfill(2)
+    assert c._frequency._seconds == str(constants["frequency_seconds"]).zfill(2)
+    
+    for task1, task2 in zip(constants["tasks"], c._tasks):
+        assert task1 == task2
