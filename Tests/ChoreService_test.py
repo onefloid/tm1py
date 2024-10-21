@@ -194,15 +194,21 @@ def test_get_all_names(constants, tm1, chore1, chore2, chore3, chore4, chore5):
     for chore_name in constants["chore_names"]:
         assert chore_name in all_chore_names
 
-def test_get_chore1(constants, tm1, chore1):
-    c = tm1.chores.get(constants["chore_name1"])
+
+@pytest.mark.parametrize("chore_name, is_active, execution_mode",
+    [
+    ("chore_name1", True,  Chore.MULTIPLE_COMMIT),
+    ("chore_name2", False, Chore.SINGLE_COMMIT)
+    ])
+def test_get_chore(chore_name, is_active, execution_mode, constants, tm1, chore1, chore2):
+    c = tm1.chores.get(constants[chore_name])
 
     assert c._start_time._datetime == constants["start_time"].replace(microsecond=0)
-    assert c._name == constants["chore_name1"]
-    assert c._name == constants["chore_name1"]
-    assert c.active is True
+    assert c._name == constants[chore_name]
+    assert c._name == constants[chore_name]
+    assert c.active is is_active
     assert c._dst_sensitivity is True
-    assert c._execution_mode == Chore.MULTIPLE_COMMIT
+    assert c._execution_mode == execution_mode
     assert c._frequency._days == str(constants["frequency_days"]).zfill(2)
     assert c._frequency._hours == str(constants["frequency_hours"]).zfill(2)
     assert c._frequency._minutes == str(constants["frequency_minutes"]).zfill(2)
