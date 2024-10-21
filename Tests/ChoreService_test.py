@@ -20,6 +20,7 @@ class TestChoreService(unittest.TestCase):
     chore_name2 = prefix + "Chore2"
     chore_name3 = prefix + "Chore3"
     chore_name4 = prefix + "Chore4"
+    chore_name5 = prefix + "Chore5"
     start_time = datetime.now()
     frequency_days = int(random.uniform(0, 355))
     frequency_hours = int(random.uniform(0, 23))
@@ -103,7 +104,13 @@ class TestChoreService(unittest.TestCase):
         self._create_or_update_chore(name=self.chore_name3, active=False, tasks=[])
 
     def tearDown(self):
-        for chore_name in [self.chore_name1, self.chore_name2, self.chore_name3, self.chore_name4]:
+        for chore_name in [
+            self.chore_name1,
+            self.chore_name2,
+            self.chore_name3,
+            self.chore_name4,
+            self.chore_name5,
+        ]:
             if self.tm1.chores.exists(chore_name):
                 self.tm1.chores.delete(chore_name)
 
@@ -128,29 +135,20 @@ class TestChoreService(unittest.TestCase):
 
     def test_create_chore_with_dst_single_commit(self):
         # create chores
-        c4 = Chore(name=self.chore_name4,
-                   start_time=ChoreStartTime(self.start_time.year, self.start_time.month, self.start_time.day,
-                                             self.start_time.hour, self.start_time.minute, self.start_time.second),
-                   dst_sensitivity=True,
-                   active=True,
-                   execution_mode=Chore.SINGLE_COMMIT,
-                   frequency=self.frequency,
-                   tasks=self.tasks)
-        self.tm1.chores.create(c4)
+        self._create_or_update_chore(name=self.chore_name5, execution_mode=Chore.SINGLE_COMMIT)
+        c5 = self.tm1.chores.get(self.chore_name5)
 
-        c4 = self.tm1.chores.get(self.chore_name4)
-
-        self.assertEqual(c4.start_time.datetime.hour, self.start_time.hour)
-        self.assertEqual(c4._start_time._datetime.replace(hour=0), self.start_time.replace(hour=0, microsecond=0))
-        self.assertEqual(c4._name, self.chore_name4)
-        self.assertEqual(c4.active, True)
-        self.assertEqual(c4._dst_sensitivity, True)
-        self.assertEqual(c4._execution_mode, Chore.SINGLE_COMMIT)
-        self.assertEqual(c4._frequency._days, str(self.frequency_days).zfill(2))
-        self.assertEqual(c4._frequency._hours, str(self.frequency_hours).zfill(2))
-        self.assertEqual(c4._frequency._minutes, str(self.frequency_minutes).zfill(2))
-        self.assertEqual(c4._frequency._seconds, str(self.frequency_seconds).zfill(2))
-        for task1, task2 in zip(self.tasks, c4._tasks):
+        self.assertEqual(c5.start_time.datetime.hour, self.start_time.hour)
+        self.assertEqual(c5._start_time._datetime.replace(hour=0), self.start_time.replace(hour=0, microsecond=0))
+        self.assertEqual(c5._name, self.chore_name5)
+        self.assertEqual(c5.active, True)
+        self.assertEqual(c5._dst_sensitivity, True)
+        self.assertEqual(c5._execution_mode, Chore.SINGLE_COMMIT)
+        self.assertEqual(c5._frequency._days, str(self.frequency_days).zfill(2))
+        self.assertEqual(c5._frequency._hours, str(self.frequency_hours).zfill(2))
+        self.assertEqual(c5._frequency._minutes, str(self.frequency_minutes).zfill(2))
+        self.assertEqual(c5._frequency._seconds, str(self.frequency_seconds).zfill(2))
+        for task1, task2 in zip(self.tasks, c5._tasks):
             self.assertEqual(task1, task2)
 
     def test_get_chore(self):
@@ -422,7 +420,7 @@ class TestChoreService(unittest.TestCase):
 
     @classmethod
     def teardown_class(cls):
-        for chore_name in [cls.chore_name1, cls.chore_name2, cls.chore_name3, cls.chore_name4]:
+        for chore_name in [cls.chore_name1, cls.chore_name2, cls.chore_name3, cls.chore_name4,cls.chore_name5]:
             if cls.tm1.chores.exists(chore_name):
                 cls.tm1.chores.delete(chore_name)
         cls.tm1.processes.delete(cls.process_name1)
