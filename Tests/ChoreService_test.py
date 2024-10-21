@@ -67,15 +67,27 @@ def constants():
     frequency_hours = int(random.uniform(0, 23))
     frequency_minutes = int(random.uniform(0, 59))
     frequency_seconds = int(random.uniform(0, 59))
+    chore_name1 = prefix + "Chore1"
+    chore_name2 = prefix + "Chore2"
+    chore_name3 = prefix + "Chore3"
+    chore_name4 = prefix + "Chore4"
+    chore_name5 = prefix + "Chore5"
 
     return {
         "process_name1": process_name1,
-        "process_name2": prefix + 'Process2',
-        "chore_name1": prefix + "Chore1",
-        "chore_name2": prefix + "Chore2",
-        "chore_name3": prefix + "Chore3",
-        "chore_name4": prefix + "Chore4",
-        "chore_name5": prefix + "Chore5",
+        "process_name2": prefix + "Process2",
+        "chore_name1": chore_name1,
+        "chore_name2": chore_name2,
+        "chore_name3": chore_name3,
+        "chore_name4": chore_name4,
+        "chore_name5": chore_name5,
+        "chore_names": [
+            chore_name1,
+            chore_name2,
+            chore_name3,
+            chore_name4,
+            chore_name5,
+        ],
         "start_time": datetime.now(),
         "frequency_days": frequency_days,
         "frequency_hours": frequency_hours,
@@ -85,13 +97,19 @@ def constants():
             days=frequency_days,
             hours=frequency_hours,
             minutes=frequency_minutes,
-            seconds=frequency_seconds
+            seconds=frequency_seconds,
         ),
         "tasks": [
-            ChoreTask(0, process_name1, parameters=[{'Name': 'pRegion', 'Value': 'UK'}]),
-            ChoreTask(1, process_name1, parameters=[{'Name': 'pRegion', 'Value': 'FR'}]),
-            ChoreTask(2, process_name1, parameters=[{'Name': 'pRegion', 'Value': 'CH'}])
-        ]
+            ChoreTask(
+                0, process_name1, parameters=[{"Name": "pRegion", "Value": "UK"}]
+            ),
+            ChoreTask(
+                1, process_name1, parameters=[{"Name": "pRegion", "Value": "FR"}]
+            ),
+            ChoreTask(
+                2, process_name1, parameters=[{"Name": "pRegion", "Value": "CH"}]
+            ),
+        ],
     }
 
 @pytest.fixture
@@ -167,17 +185,11 @@ def test_get_chore_without_tasks(constants, tm1, chore3):
     assert c3.tasks == []
 
 def test_get_all(constants, tm1, chore1, chore2, chore3, chore4, chore5):
-    all_chores = (c.name for c in tm1.chores.get_all())
-    assert constants["chore_name1"] in all_chores
-    assert constants["chore_name2"] in all_chores
-    assert constants["chore_name3"] in all_chores
-    assert constants["chore_name4"] in all_chores
-    assert constants["chore_name5"] in all_chores
+    all_chore_names = (c.name for c in tm1.chores.get_all())
+    for chore_name in constants["chore_names"]:
+        assert chore_name in all_chore_names
 
 def test_get_all_names(constants, tm1, chore1, chore2, chore3, chore4, chore5):
     all_chore_names = tm1.chores.get_all_names()
-    assert constants["chore_name1"] in all_chore_names
-    assert constants["chore_name2"] in all_chore_names
-    assert constants["chore_name3"] in all_chore_names
-    assert constants["chore_name4"] in all_chore_names
-    assert constants["chore_name5"] in all_chore_names
+    for chore_name in constants["chore_names"]:
+        assert chore_name in all_chore_names
