@@ -218,3 +218,230 @@ def test_get_chore(chore_name, is_active, execution_mode, constants, tm1, chore1
     
     for task1, task2 in zip(constants["tasks"], c._tasks):
         assert task1 == task2
+
+def test_search_for_process_name_happy_case(constants, tm1, process1, chore1, chore2):
+    chores = tm1.chores.search_for_process_name(process_name=constants["process_name1"])
+    assert len(chores) == 2
+    assert chores[0].name == constants["chore_name1"]
+    assert chores[1].name == constants["chore_name2"]
+
+def test_search_for_parameter_value_no_match(tm1):
+    chore_names = tm1.chores.search_for_parameter_value(parameter_value='NotAParamValue')
+    assert chore_names == []
+
+def test_search_for_parameter_value_happy_case(constants, tm1, process1, chore1, chore2):
+    chore_names = tm1.chores.search_for_parameter_value(parameter_value='UK')
+    assert len(chore_names) == 2
+    assert chore_names[0].name == constants["chore_name1"]
+    assert chore_names[1].name == constants["chore_name2"]
+
+def test_update_chore_dst(constants, tm1, process2, chore1):
+    # get chore
+    c = tm1.chores.get(constants["chore_name1"])
+    # update all properties
+    # update start time
+    start_time = datetime(2020, 5, 6, 17, 4, 2)
+    c._start_time = ChoreStartTime(
+        start_time.year, start_time.month, start_time.day,
+        start_time.hour, start_time.minute, start_time.second
+    )
+    # update frequency
+    frequency_days = int(random.uniform(0, 355))
+    frequency_hours = int(random.uniform(0, 23))
+    frequency_minutes = int(random.uniform(0, 59))
+    frequency_seconds = int(random.uniform(0, 59))
+    c._frequency = ChoreFrequency(
+        days=frequency_days, hours=frequency_hours,
+        minutes=frequency_minutes, seconds=frequency_seconds
+    )
+    # update tasks
+    tasks = [
+        ChoreTask(0, constants["process_name2"], parameters=[{'Name': 'pRegion', 'Value': 'DE'}]),
+        ChoreTask(1, constants["process_name2"], parameters=[{'Name': 'pRegion', 'Value': 'ES'}]),
+        ChoreTask(2, constants["process_name2"], parameters=[{'Name': 'pRegion', 'Value': 'US'}])
+    ]
+    c._tasks = tasks
+    # execution mode
+    c._execution_mode = Chore.SINGLE_COMMIT
+    # dst sensitivity
+    c.dst_sensitivity = True
+    # activate
+    c.deactivate()
+    # update chore in TM1
+    tm1.chores.update(c)
+    # get chore and check all properties
+    c = tm1.chores.get(chore_name=constants["chore_name1"])
+
+    assert c.start_time.datetime.hour == start_time.hour
+    assert c._start_time._datetime.replace(hour=0) == start_time.replace(hour=0)
+
+    assert c._name == constants["chore_name1"]
+    assert c._dst_sensitivity is True
+    assert c._active is False
+    assert c._execution_mode == Chore.SINGLE_COMMIT
+    assert int(c._frequency._days) == int(frequency_days)
+    assert int(c._frequency._hours) == int(frequency_hours)
+    assert int(c._frequency._minutes) == int(frequency_minutes)
+    assert len(tasks) == len(c._tasks)
+    # sometimes there is one second difference. Probably a small bug in the REST API
+    assert abs(int(c._frequency._seconds) - int(frequency_seconds)) <= 1
+    for task1, task2 in zip(tasks, c._tasks):
+        assert task1 == task2
+
+def test_update_active_chore(constants, tm1, chore1):
+    tm1.chores.activate(constants["chore_name1"])
+
+    c = tm1.chores.get(constants["chore_name1"])
+    c.execution_mode = Chore.MULTIPLE_COMMIT
+
+    tm1.chores.update(c)
+
+    c = tm1.chores.get(chore_name=constants["chore_name1"])
+
+    assert c.execution_mode == Chore.MULTIPLE_COMMIT
+
+def test_update_chore_without_tasks(self):
+        # get chore
+        c = self.tm1.chores.get(self.chore_name1)
+        # update all properties
+        # update start time
+        start_time = datetime(2023,4,5, 12,5,30)
+        c._start_time = ChoreStartTime(start_time.year, start_time.month, start_time.day,
+                                       start_time.hour, start_time.minute, start_time.second)
+        c.dst_sensitivity = True
+        # update frequency
+        frequency_days = int(random.uniform(0, 355))
+        frequency_hours = int(random.uniform(0, 23))
+        frequency_minutes = int(random.uniform(0, 59))
+        frequency_seconds = int(random.uniform(0, 59))
+        c._frequency = ChoreFrequency(days=frequency_days, hours=frequency_hours,
+                                      minutes=frequency_minutes, seconds=frequency_seconds)
+
+        # execution mode
+        c._execution_mode = Chore.SINGLE_COMMIT
+        # activate
+        c.deactivate()
+        # update chore in TM1
+        self.tm1.chores.update(c)
+        # get chore and check all properties
+        c = self.tm1.chores.get(chore_name=self.chore_name1)
+        self.assertEqual(c._start_time._datetime.replace(microsecond=0), start_time.replace(microsecond=0))
+        self.assertEqual(c._name, self.chore_name1)
+        self.assertEqual(c._dst_sensitivity, True)
+        self.assertEqual(c._active, False)
+        self.assertEqual(c._execution_mode, Chore.SINGLE_COMMIT)
+        self.assertEqual(int(c._frequency._days), int(frequency_days))
+        self.assertEqual(int(c._frequency._hours), int(frequency_hours))
+        self.assertEqual(int(c._frequency._minutes), int(frequency_minutes))
+
+def test_update_chore_add_tasks(tm1, constants, chore1):
+    # get chore
+    c = tm1.chores.get(constants["chore_name1"])
+    # update all properties
+    # update start time
+    start_time = datetime.now()
+    c._start_time = ChoreStartTime(start_time.year, start_time.month, start_time.day,
+                                   start_time.hour, start_time.minute, start_time.second)
+    c.dst_sensitivity = True
+    # update frequency
+    frequency_days = int(random.uniform(0, 355))
+    frequency_hours = int(random.uniform(0, 23))
+    frequency_minutes = int(random.uniform(0, 59))
+    frequency_seconds = int(random.uniform(0, 59))
+    c._frequency = ChoreFrequency(days=frequency_days, hours=frequency_hours,
+                                  minutes=frequency_minutes, seconds=frequency_seconds)
+    # update tasks
+    tasks = [ChoreTask(0, constants["process_name2"], parameters=[{'Name': 'pRegion', 'Value': 'DE'}]),
+             ChoreTask(1, constants["process_name2"], parameters=[{'Name': 'pRegion', 'Value': 'ES'}]),
+             ChoreTask(2, constants["process_name2"], parameters=[{'Name': 'pRegion', 'Value': 'CH'}]),
+             ChoreTask(3, constants["process_name2"], parameters=[{'Name': 'pRegion', 'Value': 'US'}])]
+    c._tasks = tasks
+    # execution mode
+    c._execution_mode = Chore.SINGLE_COMMIT
+    # activate
+    c.deactivate()
+    # update chore in TM1
+    tm1.chores.update(c)
+    # get chore and check all properties
+    c = tm1.chores.get(chore_name=constants["chore_name1"])
+    assert c._start_time._datetime.replace(microsecond=0) == start_time.replace(microsecond=0)
+    assert c._name == constants["chore_name1"]
+    assert c._dst_sensitivity is True
+    assert c._active is False
+    assert c._execution_mode == Chore.SINGLE_COMMIT
+    assert int(c._frequency._days) == int(frequency_days)
+    assert int(c._frequency._hours) == int(frequency_hours)
+    assert int(c._frequency._minutes) == int(frequency_minutes)
+    assert len(tasks) == len(c._tasks)
+    # sometimes there is one second difference. Probably a small bug in the REST API
+    assert abs(int(c._frequency._seconds) - int(frequency_seconds)) <= 1
+    for task1, task2 in zip(tasks, c._tasks):
+        assert task1 == task2
+
+def test_update_chore_remove_tasks(tm1, constants, chore1):
+    # get chore
+    c = tm1.chores.get(constants["chore_name1"])
+    # update all properties
+    # update start time
+    start_time = datetime.now()
+    c._start_time = ChoreStartTime(start_time.year, start_time.month, start_time.day,
+                                   start_time.hour, start_time.minute, start_time.second)
+    c.dst_sensitivity = True
+    # update frequency
+    frequency_days = int(random.uniform(0, 355))
+    frequency_hours = int(random.uniform(0, 23))
+    frequency_minutes = int(random.uniform(0, 59))
+    frequency_seconds = int(random.uniform(0, 59))
+    c._frequency = ChoreFrequency(days=frequency_days, hours=frequency_hours,
+                                  minutes=frequency_minutes, seconds=frequency_seconds)
+    # update tasks
+    tasks = [ChoreTask(0, constants["process_name2"], parameters=[{'Name': 'pRegion', 'Value': 'DE'}]),
+             ChoreTask(1, constants["process_name2"], parameters=[{'Name': 'pRegion', 'Value': 'US'}])]
+    c._tasks = tasks
+    # execution mode
+    c._execution_mode = Chore.SINGLE_COMMIT
+    # activate
+    c.deactivate()
+    # update chore in TM1
+    tm1.chores.update(c)
+    # get chore and check all properties
+    c = tm1.chores.get(chore_name=constants["chore_name1"])
+    assert c._start_time._datetime.replace(microsecond=0) == start_time.replace(microsecond=0)
+    assert c._name == constants["chore_name1"]
+    assert c._dst_sensitivity is True
+    assert c._active is False
+    assert c._execution_mode == Chore.SINGLE_COMMIT
+    assert int(c._frequency._days) == int(frequency_days)
+    assert int(c._frequency._hours) == int(frequency_hours)
+    assert int(c._frequency._minutes) == int(frequency_minutes)
+    assert len(tasks) == len(c._tasks)
+    # sometimes there is one second difference. Probably a small bug in the REST API
+    assert abs(int(c._frequency._seconds) - int(frequency_seconds)) <= 1
+    for task1, task2 in zip(tasks, c._tasks):
+        assert task1 == task2
+
+def test_activate(tm1, constants, chore1):
+    chore = tm1.chores.get(constants["chore_name1"])
+    if chore.active:
+        tm1.chores.deactivate(constants["chore_name1"])
+    tm1.chores.activate(constants["chore_name1"])
+
+def test_deactivate(tm1, constants, chore1):
+    chore = tm1.chores.get(constants["chore_name1"])
+    if not chore.active:
+        tm1.chores.activate(constants["chore_name1"])
+    tm1.chores.deactivate(constants["chore_name1"])
+
+def test_execute_chore(tm1, constants, chore1):
+    response = tm1.chores.execute_chore(constants["chore_name1"])
+    assert response.ok
+
+def test_exists(tm1, constants, chore1, chore2, chore3):
+    assert tm1.chores.exists(constants["chore_name1"])
+    assert tm1.chores.exists(constants["chore_name2"])
+    assert tm1.chores.exists(constants["chore_name3"])
+    assert not tm1.chores.exists(str(uuid1()))
+
+def test_search_for_process_name_no_match(tm1):
+    chore_names = tm1.chores.search_for_process_name(process_name="NotAProcessName")
+    assert chore_names == []
