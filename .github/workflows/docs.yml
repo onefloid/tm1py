@@ -45,5 +45,5 @@ jobs:
             mike set-default --push stable
           elif [[ "${GITHUB_REF}" == refs/heads/docs/modernize ]]; then
             echo "→ Deploying modernize"
-            mike deploy modernize --push --update-aliases
+            mike deploy modernize --push --update-aliases --force
           fi
