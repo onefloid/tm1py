@@ -1,4 +1,4 @@
 # API Reference
 
-::: tm1py.Services.TM1Service
-::: tm1py.Services.ViewService
+::: TM1py.Services.TM1Service
+::: TM1py.Services.ViewService
