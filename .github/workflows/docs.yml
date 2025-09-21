@@ -31,7 +31,8 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
+      - name: Fetch gh-pages
+        run: git fetch origin gh-pages:gh-pages
       - name: Deploy documentation
         run: |
           if [[ "${GITHUB_REF}" == refs/heads/main ]]; then
@@ -45,5 +46,5 @@ jobs:
             mike set-default --push stable
           elif [[ "${GITHUB_REF}" == refs/heads/docs/modernize ]]; then
             echo "→ Deploying modernize"
-            mike deploy modernize --push --update-aliases --force
+            mike deploy modernize --push --update-aliases
           fi
