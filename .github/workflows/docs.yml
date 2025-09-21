@@ -1,0 +1,44 @@
+name: Build and Deploy Docs
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*" # reagiert auf Tags wie v1.9.0
+  workflow_dispatch: # manuell triggern möglich
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          run: pip install -r requirements-docs.txt
+
+      - name: Configure Git (for mike commits)
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Deploy documentation
+        run: |
+          if [[ "${GITHUB_REF}" == refs/heads/main ]]; then
+            echo "→ Deploying latest"
+            mike deploy latest --push --update-aliases
+            mike set-default latest --push
+          elif [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            VERSION="${GITHUB_REF#refs/tags/}"
+            echo "→ Deploying version $VERSION"
+            mike deploy "$VERSION" --push --update-aliases
+            mike set-default --push stable
+          fi

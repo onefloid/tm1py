@@ -1,0 +1,35 @@
+/* Note = Blau */
+.md-typeset .admonition.note,
+.md-typeset details.note {
+    border-color: #00AEEF;
+}
+
+.md-typeset .admonition.note>.admonition-title,
+.md-typeset details.note>summary {
+    background-color: #E6F7FB;
+    color: #00AEEF;
+}
+
+/* Tip = Orange */
+.md-typeset .admonition.tip,
+.md-typeset details.tip {
+    border-color: #F9A825;
+}
+
+.md-typeset .admonition.tip>.admonition-title,
+.md-typeset details.tip>summary {
+    background-color: #FFF7E6;
+    color: #F9A825;
+}
+
+/* Warning = Dunkelgrau */
+.md-typeset .admonition.warning,
+.md-typeset details.warning {
+    border-color: #4A4A4A;
+}
+
+.md-typeset .admonition.warning>.admonition-title,
+.md-typeset details.warning>summary {
+    background-color: #F5F5F5;
+    color: #4A4A4A;
+}

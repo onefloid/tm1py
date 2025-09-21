@@ -1,0 +1,40 @@
+site_name: TM1py
+site_description: Python client for TM1 REST API
+repo_url: https://github.com/cubewise-code/tm1py
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: "blue"
+      accent: "orange"
+  features:
+    - navigation.sections
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - versioning # wichtig für mike Dropdown
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - API Reference: reference.md
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: sphinx
+            show_root_heading: true
+            show_root_full_path: false
+            show_source: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/cubewise-code/tm1py
+
+extra_css:
+  - stylesheets/extra.css
