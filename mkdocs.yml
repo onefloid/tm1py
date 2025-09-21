@@ -35,6 +35,8 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/cubewise-code/tm1py
+  version:
+    provider: mike
 
 extra_css:
   - stylesheets/extra.css
