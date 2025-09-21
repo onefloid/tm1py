@@ -13,7 +13,6 @@ theme:
     - search.suggest
     - search.highlight
     - content.code.copy
-    - versioning # wichtig für mike Dropdown
 
 nav:
   - Home: index.md
