@@ -17,7 +17,17 @@ theme:
 nav:
   - Home: index.md
   - Getting Started: getting-started.md
-  - API Reference: reference.md
+  - API Reference:
+      #- Core:
+      #    - TM1Service: reference/tm1service.md
+      - Services:
+          - CubeService: reference/CubeService.md
+          - DimensionService: reference/DimensionService.md
+      - Objects:
+          - Cube: reference/Cube.md
+          - Dimension: reference/Dimension.md
+      #- Utilities:
+      #    - Utils: reference/utils.md
 
 plugins:
   - search
@@ -29,6 +39,9 @@ plugins:
             show_root_heading: true
             show_root_full_path: false
             show_source: true
+  - gen-files:
+      scripts:
+        - docs/gen_ref_index.py
 
 extra:
   social:
