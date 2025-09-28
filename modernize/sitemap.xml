@@ -9,7 +9,39 @@
          <lastmod>2025-09-28</lastmod>
     </url>
     <url>
-         <loc>https://blog.onefloid.de/tm1py/modernize/reference/</loc>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/SUMMARY/</loc>
+         <lastmod>2025-09-28</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/cube/</loc>
+         <lastmod>2025-09-28</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/dimension/</loc>
+         <lastmod>2025-09-28</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/subset/</loc>
+         <lastmod>2025-09-28</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/view/</loc>
+         <lastmod>2025-09-28</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/cubeservice/</loc>
+         <lastmod>2025-09-28</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/dimensionservice/</loc>
+         <lastmod>2025-09-28</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/subsetservice/</loc>
+         <lastmod>2025-09-28</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/viewservice/</loc>
          <lastmod>2025-09-28</lastmod>
     </url>
 </urlset>
