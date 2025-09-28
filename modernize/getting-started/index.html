@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#getting-started" class="md-skip">
+        <a href="#getting-started-with-tm1py" class="md-skip">
           Skip to content
         </a>
       
@@ -285,6 +285,19 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -296,6 +309,43 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connect-and-print-server-name-and-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connect and print server name and version
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -343,6 +393,32 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connect-and-print-server-name-and-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connect and print server name and version
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -360,9 +436,24 @@
   
 
 
-<h1 id="getting-started">Getting Started</h1>
-<p>Hier erfährst du, wie du TM1py installierst und dein erstes Script schreibst:</p>
-<pre><code class="language-bash">pip install tm1py
+<h1 id="getting-started-with-tm1py">Getting Started with TM1py</h1>
+<p>TM1py is a Python library for interacting with <strong>IBM Planning Analytics / TM1</strong> via the REST API.</p>
+<hr />
+<h2 id="installation">Installation</h2>
+<pre><code class="language-bash">pip install TM1py
+</code></pre>
+<h2 id="connect-and-print-server-name-and-version">Connect and print server name and version</h2>
+<pre><code class="language-python">from TM1py import TM1Service
+
+with TM1Service(
+    address=&quot;localhost&quot;,
+    port=12354,
+    user=&quot;admin&quot;,
+    password=&quot;apple&quot;,
+    ssl=True
+) as tm1:
+    print(&quot;Server Name:&quot;, tm1.server.get_server_name())
+    print(&quot;Version:&quot;, tm1.server.get_product_version())
 </code></pre>
 
 
