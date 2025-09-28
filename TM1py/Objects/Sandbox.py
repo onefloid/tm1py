@@ -19,10 +19,11 @@ class Sandbox(TM1Object):
         queued: bool = False,
     ):
         """
-
         :param name: name of the Sandbox
         :param include_in_sandbox_dimension:
-        :params loaded, active, queued: leave default as false when creating sanbox
+        :param loaded: use default false when creating sanbox
+        :param active: use default false when creating sanbox
+        :param queued: use default false when creating sanbox
         """
         self.name = name
         self.include_in_sandbox_dimension = include_in_sandbox_dimension
