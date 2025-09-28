@@ -964,7 +964,7 @@ def get_seconds_from_duration(time_str: str) -> int:
     """
     import re
 
-    pattern = re.compile("\w(\d+)\w\w(\d+)\w(\d+)\w(\d+)\w")
+    pattern = re.compile(r"\w(\d+)\w\w(\d+)\w(\d+)\w(\d+)\w")
     matches = pattern.search(time_str)
     d, h, m, s = matches.groups()
     seconds = (int(d) * 86400) + (int(h) * 3600) + (int(m) * 60) + int(s)
@@ -1041,7 +1041,7 @@ def extract_cell_properties_from_odata_context(context: str) -> List[str]:
     :param context: A valid odata_context returned when querying cells
     :return:
     """
-    pattern = re.compile("\$metadata#Cellsets\(Cells\(([A-Za-z,]+)\)\)/\$entity")
+    pattern = re.compile(r"\$metadata#Cellsets\(Cells\(([A-Za-z,]+)\)\)/\$entity")
     matches = pattern.match(context)
     if not matches:
         raise ValueError("Could not extract cell properties from odata context")
