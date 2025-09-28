@@ -7,10 +7,14 @@ api_map = {
     "Services": {
         "CubeService": "TM1py.Services.CubeService",
         "DimensionService": "TM1py.Services.DimensionService",
+        "SubsetService": "TM1py.Services.SubsetService",
+        "ViewService": "TM1py.Services.ViewService",
     },
     "Objects": {
         "Cube": "TM1py.Objects.Cube",
         "Dimension": "TM1py.Objects.Dimension",
+        "Subset": "TM1py.Objects.Subset",
+        "View": "TM1py.Objects.View",
     },
 }
 
