@@ -1,6 +1,6 @@
 # TM1py Documentation
 
-Willkommen bei der Dokumentation von **TM1py** 🚀
+Welcome to the **TM1py** documentation 🚀
 
 - [Getting Started](getting-started.md)
 <!-- - [API Reference](reference/index.md) -->
