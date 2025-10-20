@@ -17,7 +17,8 @@ api_map = {
         "View": "TM1py.Objects.View",
     },
     "Extras": {
-        "Exceptions": "TM1py.Exceptions.Exceptions"
+        "Exceptions": "TM1py.Exceptions.Exceptions",
+        "Utils": "TM1py.Utils.Utils"
     }
 }
 
