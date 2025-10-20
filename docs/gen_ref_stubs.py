@@ -16,6 +16,9 @@ api_map = {
         "Subset": "TM1py.Objects.Subset",
         "View": "TM1py.Objects.View",
     },
+    "Extras": {
+        "Exceptions": "TM1py.Exceptions.Exceptions"
+    }
 }
 
 for category, entries in api_map.items():
