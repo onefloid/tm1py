@@ -658,6 +658,7 @@ def build_ui_arrays_from_cellset(raw_cellset_as_dict: Dict, value_precision: int
     * Returns 3-dimensional cell structure for tabbed grids or multiple charts
     * Rows and pages are dicts, addressable by their name. Proper order of rows can be obtained in headers[1]
     * Example 'cells' return format:
+    ```
         'cells': {
             '10100': {
                 'Net Operating Income': [ 19832724.72429739,
@@ -678,10 +679,11 @@ def build_ui_arrays_from_cellset(raw_cellset_as_dict: Dict, value_precision: int
                              14502421.63,
                              14321501.940000001]}
         },
+    ```
     :param raw_cellset_as_dict: raw data from TM1
     :param value_precision: Integer (optional) specifying number of decimal places to return
     :param top: Int, number of cells to return (counting from top)
-    :return: dict : { titles: [], headers: [axis][], cells: { Page0: { Row0: { [row values], Row1: [], ...}, ...}, ...} }
+    :return: dict : `{ titles: [], headers: [axis][], cells: { Page0: { Row0: { [row values], Row1: [], ...}, ...}, ...} }`
     """
     header_map = build_headers_from_cellset(raw_cellset_as_dict, force_header_dimensionality=3)
     titles = header_map["titles"]
@@ -719,6 +721,7 @@ def build_ui_dygraph_arrays_from_cellset(raw_cellset_as_dict: Dict, value_precis
     * Useful for grids or charting libraries that want an array of cell values per column
     * Returns 3-dimensional cell structure for tabbed grids or multiple charts
     * Example 'cells' return format:
+    ```
         'cells': {
             '10100': [
                 ['Q1-2004', 28981046.50724231, 19832724.72429739],
@@ -731,10 +734,10 @@ def build_ui_dygraph_arrays_from_cellset(raw_cellset_as_dict: Dict, value_precis
                 ['Q3-2004', 14502421.63, 10466934.096533755],
                 ['Q4-2004', 14321501.940000001, 10333095.839474997]]
         },
-
+    ```
     :param raw_cellset_as_dict: raw data from TM1
     :param value_precision: Integer (optional) specifying number of decimal places to return
-    :return: dict : { titles: [], headers: [axis][], cells: { Page0: [  [column name, column values], [], ... ], ...} }
+    :return: dict : `{ titles: [], headers: [axis][], cells: { Page0: [  [column name, column values], [], ... ], ...} }`
     """
     header_map = build_headers_from_cellset(raw_cellset_as_dict, force_header_dimensionality=3)
     titles = header_map["titles"]
@@ -776,7 +779,7 @@ def build_headers_from_cellset(raw_cellset_as_dict: Dict, force_header_dimension
       * Stacked headers will each be listed in the 'memebers' list; Single-element headers will only have one element in list
     :param raw_cellset_as_dict: raw data from TM1
     :param force_header_dimensionality: An optional integer (1,2 or 3) to force headers array to be at least that long
-    :return: dict : { titles: [ { 'name': 'xx', 'members': {} } ], headers: [axis][ { 'name': 'xx', 'members': {} } ] }
+    :return: dict : `{ titles: [ { 'name': 'xx', 'members': {} } ], headers: [axis][ { 'name': 'xx', 'members': {} } ] }`
     """
     dimensionality = len(raw_cellset_as_dict["Axes"])
     cardinality = [raw_cellset_as_dict["Axes"][axis]["Cardinality"] for axis in range(dimensionality)]
