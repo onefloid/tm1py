@@ -34,6 +34,7 @@ plugins:
             show_symbol_type_heading: true
             show_source: true
             merge_init_into_class: true
+            show_if_no_docstring: true
 
   - gen-files:
       scripts:
