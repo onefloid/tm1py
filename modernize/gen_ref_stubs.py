@@ -11,6 +11,7 @@ api_map = {
         "ViewService": "TM1py.Services.ViewService",
     },
     "Objects": {
+        "Annotation": "TM1py.Objects.Annotation",
         "Cube": "TM1py.Objects.Cube",
         "Dimension": "TM1py.Objects.Dimension",
         "Subset": "TM1py.Objects.Subset",
@@ -18,7 +19,8 @@ api_map = {
     },
     "Extras": {
         "Exceptions": "TM1py.Exceptions.Exceptions",
-        "Utils": "TM1py.Utils.Utils"
+        "Utils": "TM1py.Utils.Utils",
+        "MDXUtils": "TM1py.Utils.MDXUtils"
     }
 }
 
@@ -39,3 +41,12 @@ for category, entries in api_map.items():
 # SUMMARY für mkdocs
 with mkdocs_gen_files.open("reference/SUMMARY.md", "w") as nav_file:
     nav_file.writelines(nav.build_literate_nav())
+
+
+with mkdocs_gen_files.open("reference/index.md", "w") as f:
+    f.write("# API Reference\n\n")
+    f.write("Welcome to the API Reference section. Please select a category on the left.\n")
+    
+    # TODO: Add menu
+    # for item in nav.items():
+    #     print(item)
