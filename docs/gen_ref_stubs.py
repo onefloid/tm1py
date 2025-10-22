@@ -5,6 +5,7 @@ nav = mkdocs_gen_files.Nav()
 
 api_map = {
     "Services": {
+        "AnnotationService": "TM1py.Services.AnnotationService",
         "CubeService": "TM1py.Services.CubeService",
         "DimensionService": "TM1py.Services.DimensionService",
         "SubsetService": "TM1py.Services.SubsetService",
@@ -13,6 +14,7 @@ api_map = {
     "Objects": {
         "Annotation": "TM1py.Objects.Annotation",
         "Cube": "TM1py.Objects.Cube",
+        "Chore": "TM1py.Objects.Chore",
         "Dimension": "TM1py.Objects.Dimension",
         "Subset": "TM1py.Objects.Subset",
         "View": "TM1py.Objects.View",
