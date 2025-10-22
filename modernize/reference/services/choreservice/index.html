@@ -643,6 +643,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#TM1py.Services.ChoreService.ChoreService.update_or_create" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;update_or_create
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#TM1py.Services.ChoreService.ChoreService.zfill_two" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;zfill_two
@@ -2244,6 +2253,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#TM1py.Services.ChoreService.ChoreService.update_or_create" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;update_or_create
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#TM1py.Services.ChoreService.ChoreService.zfill_two" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;zfill_two
@@ -3519,6 +3537,35 @@ does not update: DST Sensitivity!</p>
 
     <span class="k">if</span> <span class="n">chore</span><span class="o">.</span><span class="n">dst_sensitivity</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_local_start_time</span><span class="p">(</span><span class="n">chore</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">chore</span><span class="o">.</span><span class="n">start_time</span><span class="o">.</span><span class="n">datetime</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="TM1py.Services.ChoreService.ChoreService.update_or_create" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <code class="highlight language-python"><span class="n">update_or_create</span><span class="p">(</span><span class="n">chore</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="quote">
+              <summary>Source code in <code>TM1py/Services/ChoreService.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_or_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chore</span><span class="p">:</span> <span class="n">Chore</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">chore_name</span><span class="o">=</span><span class="n">chore</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">chore</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">chore</span><span class="o">=</span><span class="n">chore</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

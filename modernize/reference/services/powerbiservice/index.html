@@ -848,6 +848,42 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#TM1py.Services.PowerBiService.PowerBiService.cells" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;cells
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#TM1py.Services.PowerBiService.PowerBiService.elements" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;elements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#TM1py.Services.PowerBiService.PowerBiService.execute_mdx" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;execute_mdx
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#TM1py.Services.PowerBiService.PowerBiService.execute_view" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;execute_view
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#TM1py.Services.PowerBiService.PowerBiService.get_member_properties" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_member_properties
@@ -2001,6 +2037,42 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#TM1py.Services.PowerBiService.PowerBiService.cells" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;cells
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#TM1py.Services.PowerBiService.PowerBiService.elements" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;elements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#TM1py.Services.PowerBiService.PowerBiService.execute_mdx" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;execute_mdx
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#TM1py.Services.PowerBiService.PowerBiService.execute_view" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;execute_view
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#TM1py.Services.PowerBiService.PowerBiService.get_member_properties" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_member_properties
@@ -2144,8 +2216,106 @@
 
 
 
+<div class="doc doc-object doc-attribute">
 
 
+
+<h3 id="TM1py.Services.PowerBiService.PowerBiService.cells" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">cells</span> <span class="o">=</span> <span class="n">CellService</span><span class="p">(</span><span class="n">tm1_rest</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="TM1py.Services.PowerBiService.PowerBiService.elements" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">elements</span> <span class="o">=</span> <span class="n">ElementService</span><span class="p">(</span><span class="n">tm1_rest</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="TM1py.Services.PowerBiService.PowerBiService.execute_mdx" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <code class="highlight language-python"><span class="n">execute_mdx</span><span class="p">(</span><span class="n">mdx</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="quote">
+              <summary>Source code in <code>TM1py/Services/PowerBiService.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@require_pandas</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">execute_mdx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdx</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;pd.DataFrame&quot;</span><span class="p">:</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">execute_mdx_dataframe_shaped</span><span class="p">(</span><span class="n">mdx</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="TM1py.Services.PowerBiService.PowerBiService.execute_view" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <code class="highlight language-python"><span class="n">execute_view</span><span class="p">(</span><span class="n">cube_name</span><span class="p">,</span> <span class="n">view_name</span><span class="p">,</span> <span class="n">private</span><span class="p">,</span> <span class="n">use_iterative_json</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_blob</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="quote">
+              <summary>Source code in <code>TM1py/Services/PowerBiService.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@require_pandas</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">execute_view</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">cube_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">view_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">private</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">use_iterative_json</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_blob</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;pd.DataFrame&quot;</span><span class="p">:</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">execute_view_dataframe_shaped</span><span class="p">(</span>
+        <span class="n">cube_name</span><span class="p">,</span> <span class="n">view_name</span><span class="p">,</span> <span class="n">private</span><span class="p">,</span> <span class="n">use_iterative_json</span><span class="o">=</span><span class="n">use_iterative_json</span><span class="p">,</span> <span class="n">use_blob</span><span class="o">=</span><span class="n">use_blob</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 <div class="doc doc-object doc-function">
 

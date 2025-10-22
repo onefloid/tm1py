@@ -1041,6 +1041,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#TM1py.Services.ThreadService.ThreadService.cancel_all_running" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;cancel_all_running
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#TM1py.Services.ThreadService.ThreadService.get_active" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_active
@@ -2028,6 +2037,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#TM1py.Services.ThreadService.ThreadService.cancel_all_running" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;cancel_all_running
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#TM1py.Services.ThreadService.ThreadService.get_active" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_active
@@ -2239,6 +2257,61 @@ Deprecated as of TM1 Server v12</p>
     <span class="n">url</span> <span class="o">=</span> <span class="n">format_url</span><span class="p">(</span><span class="s2">&quot;/Threads(&#39;</span><span class="si">{}</span><span class="s2">&#39;)/tm1.CancelOperation&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">thread_id</span><span class="p">))</span>
     <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rest</span><span class="o">.</span><span class="n">POST</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">response</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="TM1py.Services.ThreadService.ThreadService.cancel_all_running" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <code class="highlight language-python"><span class="n">cancel_all_running</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="quote">
+              <summary>Source code in <code>TM1py/Services/ThreadService.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@deprecated_in_version</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s2">&quot;12.0.0&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cancel_all_running</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="n">running_threads</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">canceled_threads</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">thread</span> <span class="ow">in</span> <span class="n">running_threads</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">thread</span><span class="p">[</span><span class="s2">&quot;State&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Idle&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">thread</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;System&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">thread</span><span class="p">[</span><span class="s2">&quot;Name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Pseudo&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">thread</span><span class="p">[</span><span class="s2">&quot;Function&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;GET /Threads&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">thread</span><span class="p">[</span><span class="s2">&quot;Function&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;GET /api/v1/Threads&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cancel</span><span class="p">(</span><span class="n">thread</span><span class="p">[</span><span class="s2">&quot;ID&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">canceled_threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">thread</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">canceled_threads</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

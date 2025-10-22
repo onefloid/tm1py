@@ -1027,6 +1027,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#TM1py.Services.SubsetService.SubsetService.delete_elements_from_static_subset" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;delete_elements_from_static_subset
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#TM1py.Services.SubsetService.SubsetService.exists" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;exists
@@ -2100,6 +2109,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#TM1py.Services.SubsetService.SubsetService.delete_elements_from_static_subset" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;delete_elements_from_static_subset
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#TM1py.Services.SubsetService.SubsetService.exists" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;exists
@@ -2545,6 +2563,49 @@
     <span class="p">)</span>
     <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rest</span><span class="o">.</span><span class="n">DELETE</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">response</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="TM1py.Services.SubsetService.SubsetService.delete_elements_from_static_subset" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <code class="highlight language-python"><span class="n">delete_elements_from_static_subset</span><span class="p">(</span><span class="n">dimension_name</span><span class="p">,</span> <span class="n">hierarchy_name</span><span class="p">,</span> <span class="n">subset_name</span><span class="p">,</span> <span class="n">private</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="quote">
+              <summary>Source code in <code>TM1py/Services/SubsetService.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">delete_elements_from_static_subset</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">dimension_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">hierarchy_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">subset_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">private</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+    <span class="n">subsets</span> <span class="o">=</span> <span class="s2">&quot;PrivateSubsets&quot;</span> <span class="k">if</span> <span class="n">private</span> <span class="k">else</span> <span class="s2">&quot;Subsets&quot;</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">format_url</span><span class="p">(</span>
+        <span class="s2">&quot;/Dimensions(&#39;</span><span class="si">{}</span><span class="s2">&#39;)/Hierarchies(&#39;</span><span class="si">{}</span><span class="s2">&#39;)/</span><span class="si">{}</span><span class="s2">(&#39;</span><span class="si">{}</span><span class="s2">&#39;)/Elements/$ref&quot;</span><span class="p">,</span>
+        <span class="n">dimension_name</span><span class="p">,</span>
+        <span class="n">hierarchy_name</span><span class="p">,</span>
+        <span class="n">subsets</span><span class="p">,</span>
+        <span class="n">subset_name</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rest</span><span class="o">.</span><span class="n">DELETE</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

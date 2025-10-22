@@ -502,6 +502,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#TM1py.Services.ApplicationService.ApplicationService.get_all_private_root_names" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_all_private_root_names
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#TM1py.Services.ApplicationService.ApplicationService.get_all_public_root_names" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_all_public_root_names
@@ -523,6 +532,15 @@
   <a href="#TM1py.Services.ApplicationService.ApplicationService.get_names" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_names
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#TM1py.Services.ApplicationService.ApplicationService.rename" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;rename
     </span>
   </a>
   
@@ -2145,6 +2163,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#TM1py.Services.ApplicationService.ApplicationService.get_all_private_root_names" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_all_private_root_names
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#TM1py.Services.ApplicationService.ApplicationService.get_all_public_root_names" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_all_public_root_names
@@ -2166,6 +2193,15 @@
   <a href="#TM1py.Services.ApplicationService.ApplicationService.get_names" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_names
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#TM1py.Services.ApplicationService.ApplicationService.rename" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;rename
     </span>
   </a>
   
@@ -2378,7 +2414,7 @@
                 <code>application</code>
             </td>
             <td>
-                  <code><span title="typing.Union">Union</span>[<span title="TM1py.Objects.Application.Application">Application</span>, <a class="autorefs autorefs-internal" title="              DocumentApplication(path, name, content, file_id=None, file_name=None, last_updated=None) (TM1py.Objects.Application.DocumentApplication)" href="../../objects/application/#TM1py.Objects.Application.DocumentApplication">DocumentApplication</a>]</code>
+                  <code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="              Application(path, name, application_type) (TM1py.Objects.Application.Application)" href="../../objects/application/#TM1py.Objects.Application.Application">Application</a>, <a class="autorefs autorefs-internal" title="              DocumentApplication(path, name, content, file_id=None, file_name=None, last_updated=None) (TM1py.Objects.Application.DocumentApplication)" href="../../objects/application/#TM1py.Objects.Application.DocumentApplication">DocumentApplication</a>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -2686,7 +2722,7 @@
                 <code>application_type</code>
             </td>
             <td>
-                  <code><span title="typing.Union">Union</span>[<span title="str">str</span>, <span title="TM1py.Objects.Application.ApplicationTypes">ApplicationTypes</span>]</code>
+                  <code><span title="typing.Union">Union</span>[<span title="str">str</span>, <a class="autorefs autorefs-internal" title="            ApplicationTypes (TM1py.Objects.Application.ApplicationTypes)" href="../../objects/application/#TM1py.Objects.Application.ApplicationTypes">ApplicationTypes</a>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -2879,7 +2915,7 @@
                 <code>application_type</code>
             </td>
             <td>
-                  <code><span title="typing.Union">Union</span>[<span title="str">str</span>, <span title="TM1py.Objects.Application.ApplicationTypes">ApplicationTypes</span>]</code>
+                  <code><span title="typing.Union">Union</span>[<span title="str">str</span>, <a class="autorefs autorefs-internal" title="            ApplicationTypes (TM1py.Objects.Application.ApplicationTypes)" href="../../objects/application/#TM1py.Objects.Application.ApplicationTypes">ApplicationTypes</a>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3058,7 +3094,7 @@
                 <code>application_type</code>
             </td>
             <td>
-                  <code><span title="typing.Union">Union</span>[<span title="str">str</span>, <span title="TM1py.Objects.Application.ApplicationTypes">ApplicationTypes</span>]</code>
+                  <code><span title="typing.Union">Union</span>[<span title="str">str</span>, <a class="autorefs autorefs-internal" title="            ApplicationTypes (TM1py.Objects.Application.ApplicationTypes)" href="../../objects/application/#TM1py.Objects.Application.ApplicationTypes">ApplicationTypes</a>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3116,7 +3152,7 @@
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="TM1py.Objects.Application.Application">Application</span></code>
+                  <code><a class="autorefs autorefs-internal" title="              Application(path, name, application_type) (TM1py.Objects.Application.Application)" href="../../objects/application/#TM1py.Objects.Application.Application">Application</a></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3295,6 +3331,37 @@
             <span class="n">cube_name</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;View&quot;</span><span class="p">][</span><span class="s2">&quot;Cube&quot;</span><span class="p">][</span><span class="s2">&quot;Name&quot;</span><span class="p">],</span>
             <span class="n">view_name</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;View&quot;</span><span class="p">][</span><span class="s2">&quot;Name&quot;</span><span class="p">],</span>
         <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="TM1py.Services.ApplicationService.ApplicationService.get_all_private_root_names" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <code class="highlight language-python"><span class="n">get_all_private_root_names</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="quote">
+              <summary>Source code in <code>TM1py/Services/ApplicationService.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_all_private_root_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;/Contents(&#39;Applications&#39;)/PrivateContents&quot;</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rest</span><span class="o">.</span><span class="n">GET</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">applications</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">application</span><span class="p">[</span><span class="s2">&quot;Name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">application</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;value&quot;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">applications</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3690,6 +3757,83 @@
 <div class="doc doc-object doc-function">
 
 
+<h3 id="TM1py.Services.ApplicationService.ApplicationService.rename" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <code class="highlight language-python"><span class="n">rename</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">application_type</span><span class="p">,</span> <span class="n">application_name</span><span class="p">,</span> <span class="n">new_application_name</span><span class="p">,</span> <span class="n">private</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="quote">
+              <summary>Source code in <code>TM1py/Services/ApplicationService.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rename</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">application_type</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ApplicationTypes</span><span class="p">],</span>
+    <span class="n">application_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">new_application_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="c1"># raise ValueError if not a valid ApplicationType</span>
+    <span class="n">application_type</span> <span class="o">=</span> <span class="n">ApplicationTypes</span><span class="p">(</span><span class="n">application_type</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">application_type</span> <span class="o">==</span> <span class="n">ApplicationTypes</span><span class="o">.</span><span class="n">FOLDER</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">verify_version</span><span class="p">(</span>
+        <span class="n">required_version</span><span class="o">=</span><span class="s2">&quot;12&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span>
+    <span class="p">):</span>
+        <span class="n">application_name</span> <span class="o">+=</span> <span class="n">application_type</span><span class="o">.</span><span class="n">suffix</span>
+
+    <span class="n">contents</span> <span class="o">=</span> <span class="s2">&quot;PrivateContents&quot;</span> <span class="k">if</span> <span class="n">private</span> <span class="k">else</span> <span class="s2">&quot;Contents&quot;</span>
+    <span class="n">mid</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">mid</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">format_url</span><span class="p">(</span><span class="s2">&quot;/Contents(&#39;</span><span class="si">{}</span><span class="s2">&#39;)&quot;</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)])</span>
+
+    <span class="n">url</span> <span class="o">=</span> <span class="n">format_url</span><span class="p">(</span>
+        <span class="s2">&quot;/Contents(&#39;Applications&#39;)&quot;</span> <span class="o">+</span> <span class="n">mid</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">contents</span> <span class="o">+</span> <span class="s2">&quot;(&#39;</span><span class="si">{application_name}</span><span class="s2">&#39;)/tm1.Move&quot;</span><span class="p">,</span>
+        <span class="n">application_name</span><span class="o">=</span><span class="n">application_name</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Name&quot;</span><span class="p">:</span> <span class="n">new_application_name</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rest</span><span class="o">.</span><span class="n">POST</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h3 id="TM1py.Services.ApplicationService.ApplicationService.update" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <code class="highlight language-python"><span class="n">update</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="n">private</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
@@ -3717,7 +3861,7 @@
                 <code>application</code>
             </td>
             <td>
-                  <code><span title="typing.Union">Union</span>[<span title="TM1py.Objects.Application.Application">Application</span>, <a class="autorefs autorefs-internal" title="              DocumentApplication(path, name, content, file_id=None, file_name=None, last_updated=None) (TM1py.Objects.Application.DocumentApplication)" href="../../objects/application/#TM1py.Objects.Application.DocumentApplication">DocumentApplication</a>]</code>
+                  <code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="              Application(path, name, application_type) (TM1py.Objects.Application.Application)" href="../../objects/application/#TM1py.Objects.Application.Application">Application</a>, <a class="autorefs autorefs-internal" title="              DocumentApplication(path, name, content, file_id=None, file_name=None, last_updated=None) (TM1py.Objects.Application.DocumentApplication)" href="../../objects/application/#TM1py.Objects.Application.DocumentApplication">DocumentApplication</a>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4009,7 +4153,7 @@
                 <code>application</code>
             </td>
             <td>
-                  <code><span title="typing.Union">Union</span>[<span title="TM1py.Objects.Application.Application">Application</span>, <a class="autorefs autorefs-internal" title="              DocumentApplication(path, name, content, file_id=None, file_name=None, last_updated=None) (TM1py.Objects.Application.DocumentApplication)" href="../../objects/application/#TM1py.Objects.Application.DocumentApplication">DocumentApplication</a>]</code>
+                  <code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="              Application(path, name, application_type) (TM1py.Objects.Application.Application)" href="../../objects/application/#TM1py.Objects.Application.Application">Application</a>, <a class="autorefs autorefs-internal" title="              DocumentApplication(path, name, content, file_id=None, file_name=None, last_updated=None) (TM1py.Objects.Application.DocumentApplication)" href="../../objects/application/#TM1py.Objects.Application.DocumentApplication">DocumentApplication</a>]</code>
             </td>
             <td>
               <div class="doc-md-description">
