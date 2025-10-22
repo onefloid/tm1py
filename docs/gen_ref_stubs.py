@@ -40,3 +40,12 @@ for category, entries in api_map.items():
 # SUMMARY für mkdocs
 with mkdocs_gen_files.open("reference/SUMMARY.md", "w") as nav_file:
     nav_file.writelines(nav.build_literate_nav())
+
+
+with mkdocs_gen_files.open("reference/index.md", "w") as f:
+    f.write("# API Reference\n\n")
+    f.write("Welcome to the API Reference section. Please select a category on the left.\n")
+    
+    # TODO: Add menu
+    # for item in nav.items():
+    #     print(item)
