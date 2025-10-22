@@ -33,6 +33,30 @@
          <lastmod>2025-10-22</lastmod>
     </url>
     <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/application/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/axis/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/chore/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/chorefrequency/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/chorestarttime/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/choretask/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
          <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/cube/</loc>
          <lastmod>2025-10-22</lastmod>
     </url>
@@ -41,11 +65,103 @@
          <lastmod>2025-10-22</lastmod>
     </url>
     <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/element/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/elementattribute/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/git/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/gitcommit/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/gitplan/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/gitproject/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/gitremote/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/hierarchy/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/mdxview/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/nativeview/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/process/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/processdebugbreakpoint/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/rules/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/sandbox/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/server/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
          <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/subset/</loc>
          <lastmod>2025-10-22</lastmod>
     </url>
     <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/tm1object/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/user/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
          <loc>https://blog.onefloid.de/tm1py/modernize/reference/objects/view/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/annotationservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/applicationservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/auditlogservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/cellservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/choreservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/configurationservice/</loc>
          <lastmod>2025-10-22</lastmod>
     </url>
     <url>
@@ -57,7 +173,91 @@
          <lastmod>2025-10-22</lastmod>
     </url>
     <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/elementservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/fileservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/gitservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/hierarchyservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/jobservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/loggerservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/manageservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/messagelogservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/monitoringservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/objectservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/powerbiservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/processservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/restservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/sandboxservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/securityservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/serverservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/sessionservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
          <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/subsetservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/threadservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/tm1service/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/transactionlogservice/</loc>
+         <lastmod>2025-10-22</lastmod>
+    </url>
+    <url>
+         <loc>https://blog.onefloid.de/tm1py/modernize/reference/services/userservice/</loc>
          <lastmod>2025-10-22</lastmod>
     </url>
     <url>
