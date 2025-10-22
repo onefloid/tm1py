@@ -18,7 +18,8 @@ api_map = {
     },
     "Extras": {
         "Exceptions": "TM1py.Exceptions.Exceptions",
-        "Utils": "TM1py.Utils.Utils"
+        "Utils": "TM1py.Utils.Utils",
+        "MDXUtils": "TM1py.Utils.MDXUtils"
     }
 }
 
