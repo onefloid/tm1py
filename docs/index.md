@@ -23,6 +23,9 @@ TM1py offers handy features to interact with TM1 from Python, such as
 - Functions to execute TI process or loose statements of TI (e.g. `tm1.processes.execute_with_return`)
 - CRUD features for all TM1 objects (cubes, dimensions, subsets, etc.)
 
+## Explore the TM1py Documentation
+
 - [Getting Started](getting-started.md)
-- [API Reference](reference/summary.md)
+- [How to Contribute](how-to-contribute.md)
 - [Links](links.md)
+- [API Reference](reference/summary.md)
