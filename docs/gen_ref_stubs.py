@@ -34,5 +34,6 @@ for category, entries in api_map.items():
         nav[category, name] = rel_filename
 
 
-with mkdocs_gen_files.open("reference/SUMMARY.md", "w") as nav_file:
+with mkdocs_gen_files.open("reference/summary.md", "w") as nav_file:
+    nav_file.write("# API Reference\n")
     nav_file.writelines(nav.build_literate_nav())

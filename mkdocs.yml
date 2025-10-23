@@ -24,7 +24,7 @@ exclude_docs: |
 plugins:
   - search
   - literate-nav:
-      nav_file: SUMMARY.md
+      nav_file: summary.md
   - mkdocstrings:
       handlers:
         python:
