@@ -22,6 +22,7 @@ nav:
 
 exclude_docs: |
   README.md
+  requirements-docs.txt
 
 plugins:
   - search
