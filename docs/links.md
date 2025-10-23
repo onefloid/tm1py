@@ -7,7 +7,7 @@ Here is a collection of useful links for TM1py:
 - [TM1py GitHub Repository](https://github.com/cubewise-code/tm1py): The official repository for TM1py.
 - [TM1py Examples](https://github.com/cubewise-code/tm1py-samples): Examples and use cases for TM1py.
 - [TM1py Github Issues](https://github.com/cubewise-code/tm1py/issues): Found a bug or have a feature request? Open a GitHub issue.
-- [TM1py Support](https://code.cubewise.com/services/tm1py-support-by-cubewise/): Professional support for TM1py (paid service).
+- [TM1py Support by Cubewise](https://code.cubewise.com/services/tm1py-support-by-cubewise/): Commercial support is available from Cubewise, whose team contributes to the project. The project itself remains community-maintained.
 
 ## Extensions and Tools
 
