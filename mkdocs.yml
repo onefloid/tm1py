@@ -16,9 +16,9 @@ theme:
 nav:
   - Home: index.md
   - Getting Started: getting-started.md
-  - API Reference: reference/
   - How to Contribute: how-to-contribute.md
   - Links: links.md
+  - API Reference: reference/
 
 exclude_docs: |
   README.md
