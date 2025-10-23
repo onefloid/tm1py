@@ -13,7 +13,7 @@ To ensure consistency across the codebase, we use the following tools:
 - **[Black](https://black.readthedocs.io/en/stable/)**: An auto-formatter for Python code. Please format your code using Black before submitting a pull request.
 - **[Ruff](https://beta.ruff.rs/docs/)**: A fast Python linter. Make sure your code passes all linting checks.
 
-### Editor Integration
+## Editor Integration
 
 Both **Black** and **Ruff** have excellent integrations with popular editors like [VS Code](https://code.visualstudio.com/) and [PyCharm](https://www.jetbrains.com/pycharm/). Setting up these tools in your editor ensures that your code is automatically formatted and linted as you work.
 
