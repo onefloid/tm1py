@@ -17,6 +17,7 @@ nav:
   - Home: index.md
   - Getting Started: getting-started.md
   - API Reference: reference/
+  - How to Contribute: how-to-contribute.md
   - Links: links.md
 
 exclude_docs: |
