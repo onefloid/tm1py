@@ -5,7 +5,7 @@ Here is a collection of useful links for TM1py:
 ## TM1py Resources
 
 - [TM1py GitHub Repository](https://github.com/cubewise-code/tm1py): The official repository for TM1py.
-- [TM1py Examples](https://github.com/cubewise-code/tm1py-samples): Examples and use cases for TM1py.
+- [TM1py Pypi Package](https://pypi.org/project/TM1py/): The offical TM1py package on PyPi
 - [TM1py Github Issues](https://github.com/cubewise-code/tm1py/issues): Found a bug or have a feature request? Open a GitHub issue.
 - [TM1py Support by Cubewise](https://code.cubewise.com/services/tm1py-support-by-cubewise/): Commercial support is available from Cubewise, whose team contributes to the project. The project itself remains community-maintained.
 
@@ -17,4 +17,9 @@ Here is a collection of useful links for TM1py:
 
 ## Tutorials and Guides
 
+- [TM1py Examples](https://github.com/cubewise-code/tm1py-samples): Examples and use cases for TM1py.
 - [Getting Started with TM1py](https://code.cubewise.com/blog/getting-started-with-tm1py/): A practical introduction to TM1py with examples.
+
+## Miscellaneous
+
+- [Interview with Marius Wirtz, Creator of TM1py](https://www.youtube.com/watch?v=EbCpfpaPaio): Watch an insightful interview with the creator of TM1py, Marius Wirtz.
