@@ -1,5 +1,7 @@
 # How to Contribute
 
+## Start Contributing
+
 TM1py is an open-source project. It thrives on contributions from the TM1 community. If you find a bug or feel like you can contribute a missing feature, please follow these steps:
 
 1. **Fork the Repository**: Start by forking the [TM1py GitHub repository](https://github.com/cubewise-code/tm1py).
