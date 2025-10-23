@@ -4,6 +4,8 @@ repo_url: https://github.com/cubewise-code/tm1py
 
 theme:
   name: material
+  favicon: img/favicon_tm1py_centered_64x64.png
+  logo: img/favicon_tm1py_centered_128x128.png
   palette:
     - scheme: default
       primary: "blue"
@@ -52,8 +54,5 @@ extra:
       link: https://github.com/cubewise-code/tm1py
   version:
     provider: mike
-
-extra_css:
-  - stylesheets/extra.css
 
 site_url: https://tm1py.org
