@@ -18,6 +18,9 @@ nav:
   - Getting Started: getting-started.md
   - API Reference: reference/
 
+exclude_docs: |
+  README.md
+
 plugins:
   - search
   - literate-nav:
@@ -50,4 +53,4 @@ extra:
 extra_css:
   - stylesheets/extra.css
 
-site_url: https://blog.onefloid.de/tm1py/
+site_url: https://tm1py.org
