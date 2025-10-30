@@ -56,3 +56,8 @@ extra:
     provider: mike
 
 site_url: https://tm1py.org
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
