@@ -33,7 +33,7 @@ jobs:
         run: git fetch origin gh-pages:gh-pages || echo "gh-pages does not exist yet"
       - name: Deploy documentation
         run: |
-          if [[ "${GITHUB_REF}" == refs/heads/main ]]; then
+          if [[ "${GITHUB_REF}" == refs/heads/master ]]; then
             echo "→ Deploying latest"
             mike deploy latest --push --update-aliases
             mike set-default latest --push
