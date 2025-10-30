@@ -29,8 +29,10 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Fetch gh-pages branch (if exists)
         run: git fetch origin gh-pages:gh-pages || echo "gh-pages does not exist yet"
+
       - name: Deploy documentation
         run: |
           if [[ "${GITHUB_REF}" == refs/heads/master ]]; then
@@ -43,10 +45,6 @@ jobs:
             mike deploy "$VERSION" --push --update-aliases
             mike set-default --push stable
           fi
-
-      - name: Copy CNAME file from master branch
-        run: |
-          git checkout master -- CNAME || echo "No CNAME file in master branch"
 
       - name: Copy and commit CNAME file (if exists)
         run: |
