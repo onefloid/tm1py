@@ -34,7 +34,7 @@ pip install "tm1py[pandas]"
 
 ### TM1 11 on-premise
 
-``` python
+```python
 from TM1py.Services import TM1Service
 
 with TM1Service(address='localhost', port=8001, user='admin', password='apple', ssl=True) as tm1:
@@ -43,7 +43,7 @@ with TM1Service(address='localhost', port=8001, user='admin', password='apple', 
 
 ### TM1 11 on IBM cloud
 
-``` python
+```python
 with TM1Service(
         base_url='https://mycompany.planning-analytics.ibmcloud.com/tm1/api/tm1/',
         user="non_interactive_user",
@@ -57,7 +57,7 @@ with TM1Service(
 
 ### TM1 12 PAaaS
 
-``` python
+```python
 from TM1py import TM1Service
 
 params = {
@@ -75,7 +75,7 @@ with TM1Service(**params) as tm1:
 
 ### TM1 12 on-premise & Cloud Pak For Data
 
-``` python
+```python
 with TM1Service(
         address="tm1-ibm-operands-services.apps.cluster.your-cluster.company.com",
         instance="your instance name",
@@ -90,7 +90,7 @@ with TM1Service(
 
 ### TM1 12 on-premise with access token
 
-``` python
+```python
 params = {
     "base_url": "https://pa12.dev.net/api/<InstanceId>/v0/tm1/<DatabaseName>",
     "user": "8643fd6....8a6b",
