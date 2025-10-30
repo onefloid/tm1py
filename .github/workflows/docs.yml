@@ -48,17 +48,17 @@ jobs:
         run: |
           git checkout master -- CNAME || echo "No CNAME file in master branch"
 
-      - name: Commit and push CNAME file (if changed)
+      - name: Copy and commit CNAME file (if exists)
         run: |
-          git checkout master -- CNAME || echo "No CNAME file in master branch"
-          if [[ -f CNAME ]]; then
+          if git checkout master -- docs/CNAME 2>/dev/null; then
+            mv docs/CNAME .
             git add CNAME
             if ! git diff --cached --quiet; then
               git commit -m "Update CNAME file"
               git push origin gh-pages
             else
-              echo "No changes to commit"
+              echo "No changes to commit for CNAME"
             fi
           else
-            echo "No CNAME file to commit"
+            echo "No CNAME file found in master branch"
           fi
