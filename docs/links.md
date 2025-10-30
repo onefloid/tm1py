@@ -11,8 +11,9 @@ Here is a collection of useful links for TM1py:
 
 ## Extensions and Tools
 
-- [OptimusPy - Find your ideal for TM1](https://github.com/cubewise-code/optimus-py): Optimization tool for TM1.
+- [OptimusPy - Find the ideal dimension order for your cubes](https://github.com/cubewise-code/optimus-py): Optimization tool for TM1.
 - [tm1cli - A command line interface for TM1](https://github.com/onefloid/tm1cli): Command-line tool for TM1.
+- [RushTI - Run TI processes in parallel](https://github.com/cubewise-code/rushti): Uses TM1py to execute TI processes in parallel using only one connection
 - [TM1 Data Integration and Automation Toolkit](https://github.com/KnowledgeSeed/tm1_bedrock_py): Toolkit for data integration and automation in TM1.
 
 ## Tutorials and Guides
