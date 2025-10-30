@@ -43,3 +43,22 @@ jobs:
             mike deploy "$VERSION" --push --update-aliases
             mike set-default --push stable
           fi
+
+      - name: Copy CNAME file from master branch
+        run: |
+          git checkout master -- CNAME || echo "No CNAME file in master branch"
+
+      - name: Commit and push CNAME file (if changed)
+        run: |
+          git checkout master -- CNAME || echo "No CNAME file in master branch"
+          if [[ -f CNAME ]]; then
+            git add CNAME
+            if ! git diff --cached --quiet; then
+              git commit -m "Update CNAME file"
+              git push origin gh-pages
+            else
+              echo "No changes to commit"
+            fi
+          else
+            echo "No CNAME file to commit"
+          fi
