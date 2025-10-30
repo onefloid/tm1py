@@ -44,10 +44,6 @@ jobs:
             mike set-default --push stable
           fi
 
-      - name: Copy CNAME file from master branch
-        run: |
-          git checkout master -- CNAME || echo "No CNAME file in master branch"
-
       - name: Copy and commit CNAME file (if exists)
         run: |
           git checkout gh-pages
