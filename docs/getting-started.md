@@ -6,15 +6,15 @@ TM1py is a Python library for interacting with **IBM Planning Analytics / TM1** 
 
 ## Requirements
 
-- python (3.7 or higher)
-- requests
-- requests_negotiate_sspi
-- TM1 11, TM1 12
-- keyring
+- [Python](https://www.python.org/downloads/) (3.7 or higher)
+- [TM1/Planning Analytics](https://www.ibm.com/products/planning-analytics) (v11 or higher)
 
-## Optional Requirements
+## Optional Python Packages
+
+To fully unlock TM1py's potential, these two packages are optional.
 
 - pandas
+- networkx
 
 ## Installation
 
