@@ -9,6 +9,7 @@ except ImportError:
     pass
 
 
+from Tests.Utils import generate_test_uuid
 from TM1py import AnonymousSubset, MDXView, NativeView
 from TM1py.Objects import Cube, Dimension, Element, ElementAttribute, Hierarchy
 from TM1py.Services import TM1Service
@@ -18,12 +19,6 @@ from .Utils import skip_if_no_pandas
 
 class TestPowerBiService(unittest.TestCase):
     tm1: TM1Service
-    prefix = "TM1py_Tests_PowerBiService_"
-    cube_name = prefix + "Cube"
-    mdx_view_name = prefix + "MDXView"
-    native_view_name = prefix + "NativeView"
-    dimension_name = prefix + "Dimension"
-    dimension_names = [prefix + "Dimension1", prefix + "Dimension2", prefix + "Dimension3"]
 
     MDX_TEMPLATE = """
     SELECT 
@@ -58,6 +53,19 @@ class TestPowerBiService(unittest.TestCase):
         cls.config = configparser.ConfigParser()
         cls.config.read(Path(__file__).parent.joinpath("config.ini"))
         cls.tm1 = TM1Service(**cls.config["tm1srv01"])
+
+        # Define unique names
+        test_uuid = generate_test_uuid()
+        cls.prefix = "TM1py_Tests_PowerBiService_"
+        cls.cube_name = cls.prefix + "Cube_" + test_uuid
+        cls.mdx_view_name = cls.prefix + "MDXView_" + test_uuid
+        cls.native_view_name = cls.prefix + "NativeView_" + test_uuid
+        cls.dimension_name = cls.prefix + "Dimension_" + test_uuid
+        cls.dimension_names = [
+            cls.prefix + "Dimension1_" + test_uuid,
+            cls.prefix + "Dimension2_" + test_uuid,
+            cls.prefix + "Dimension3_" + test_uuid,
+        ]
 
         # generate random coordinates
         cls.target_coordinates = list(
@@ -234,13 +242,13 @@ class TestPowerBiService(unittest.TestCase):
 
         expected_df = pd.DataFrame(
             {
-                "TM1py_Tests_PowerBiService_Dimension1": {
+                self.dimension_names[0]: {
                     0: "Element 1",
                     1: "Element 1",
                     2: "Element 2",
                     3: "Element 2",
                 },
-                "TM1py_Tests_PowerBiService_Dimension2": {
+                self.dimension_names[1]: {
                     0: "Element 1",
                     1: "Element 2",
                     2: "Element 1",
@@ -296,13 +304,13 @@ class TestPowerBiService(unittest.TestCase):
 
         expected_df = pd.DataFrame(
             {
-                "TM1py_Tests_PowerBiService_Dimension1": {
+                self.dimension_names[0]: {
                     0: "Element 1",
                     1: "Element 1",
                     2: "Element 2",
                     3: "Element 2",
                 },
-                "TM1py_Tests_PowerBiService_Dimension2": {
+                self.dimension_names[1]: {
                     0: "Element 1",
                     1: "Element 2",
                     2: "Element 1",
@@ -353,13 +361,13 @@ class TestPowerBiService(unittest.TestCase):
 
         expected_df = pd.DataFrame(
             {
-                "TM1py_Tests_PowerBiService_Dimension1": {
+                self.dimension_names[0]: {
                     0: "Element 1",
                     1: "Element 1",
                     2: "Element 2",
                     3: "Element 2",
                 },
-                "TM1py_Tests_PowerBiService_Dimension2": {
+                self.dimension_names[1]: {
                     0: "Element 1",
                     1: "Element 2",
                     2: "Element 1",
