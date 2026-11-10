@@ -2,6 +2,7 @@ import configparser
 import unittest
 from pathlib import Path
 
+from Tests.Utils import generate_test_uuid
 from TM1py import TM1Service
 from TM1py.Exceptions import TM1pyVersionException
 
@@ -15,21 +16,32 @@ from .Utils import (
 class TestFileService(unittest.TestCase):
     tm1: TM1Service
 
-    FILE_NAME1 = "TM1py_unittest_file1"
-    FILE_NAME2 = "TM1py_unittest_file2"
-    FILE_NAME3 = "TM1py_unittest_file3"
+    @classmethod
+    def setUpClass(cls) -> None:
+        """
+        Establishes a connection to TM1 and defines unique file and folder names for this test run
+        """
+        cls.config = configparser.ConfigParser()
+        cls.config.read(Path(__file__).parent.joinpath("config.ini"))
+        cls.tm1 = TM1Service(**cls.config["tm1srv01"])
 
-    FILE_NAME1_IN_FOLDER = Path("TM1py") / "Tests" / FILE_NAME1
-    FILE_NAME2_IN_FOLDER = Path("TM1py") / "Tests" / FILE_NAME2
+        cls.test_uuid = generate_test_uuid()
+        cls.FILE_NAME1 = "TM1py_unittest_" + cls.test_uuid + "_file1"
+        cls.FILE_NAME2 = "TM1py_unittest_" + cls.test_uuid + "_file2"
+        cls.FILE_NAME3 = "TM1py_unittest_" + cls.test_uuid + "_file3"
 
-    FOLDER_NAME1 = "TM1py_unittest_folder1"
-    NESTED_FOLDER_PATH = Path("TM1py_unittest_folder2") / "subfolder_a" / "subfolder_b"
+        cls.ROOT_FOLDER = "TM1py_unittest_" + cls.test_uuid
+        cls.FILE_NAME1_IN_FOLDER = Path(cls.ROOT_FOLDER) / "Tests" / cls.FILE_NAME1
+        cls.FILE_NAME2_IN_FOLDER = Path(cls.ROOT_FOLDER) / "Tests" / cls.FILE_NAME2
+
+        cls.FOLDER_NAME1 = "TM1py_unittest_folder1_" + cls.test_uuid
+        cls.NESTED_FOLDER_PATH = Path("TM1py_unittest_folder2_" + cls.test_uuid) / "subfolder_a" / "subfolder_b"
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.tm1.logout()
 
     def setUp(self) -> None:
-        self.config = configparser.ConfigParser()
-        self.config.read(Path(__file__).parent.joinpath("config.ini"))
-        self.tm1 = TM1Service(**self.config["tm1srv01"])
-
         with open(Path(__file__).parent.joinpath("resources", "file.csv"), "rb") as file:
             self.tm1.files.update_or_create(self.FILE_NAME1, file.read())
 
@@ -198,7 +210,7 @@ class TestFileService(unittest.TestCase):
 
     @skip_if_version_lower_than(version="11.4")
     def test_search_string_in_name__name_contains_both_existing(self):
-        result = self.tm1.files.search_string_in_name(name_contains=[self.FILE_NAME1[:5], self.FILE_NAME1[-5:]])
+        result = self.tm1.files.search_string_in_name(name_contains=[self.test_uuid, "file1"])
         self.assertEqual([self.FILE_NAME1], result)
 
     @skip_if_version_lower_than(version="11.4")
@@ -283,4 +295,6 @@ class TestFileService(unittest.TestCase):
             self.tm1.files.delete(self.FOLDER_NAME1)
         if self.tm1.files.exists(self.NESTED_FOLDER_PATH.parts[0]):
             self.tm1.files.delete(self.NESTED_FOLDER_PATH.parts[0])
-        self.tm1.logout()
+        if verify_version(required_version="12", version=self.tm1.version):
+            if self.tm1.files.exists(self.ROOT_FOLDER):
+                self.tm1.files.delete(self.ROOT_FOLDER)
