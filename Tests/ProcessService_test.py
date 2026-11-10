@@ -1,14 +1,16 @@
 import configparser
 import copy
-import random
 import time
 import unittest
 import uuid
 from pathlib import Path
 
+from Tests.Utils import generate_test_uuid
 from TM1py.Exceptions import TM1pyException, TM1pyTimeout
 from TM1py.Objects import (
     BreakPointType,
+    Dimension,
+    Hierarchy,
     HitMode,
     Process,
     ProcessDebugBreakpoint,
@@ -23,72 +25,6 @@ from .Utils import skip_if_version_higher_or_equal_than, skip_if_version_lower_t
 class TestProcessService(unittest.TestCase):
     tm1: TM1Service
 
-    prefix = "TM1py_Tests_"
-
-    some_name = "some_name"
-
-    p_none = Process(name=prefix + "_none_" + some_name, datasource_type="None")
-    p_ascii = Process(
-        name=prefix + "_ascii_" + some_name,
-        datasource_type="ASCII",
-        datasource_ascii_delimiter_type="Character",
-        datasource_ascii_delimiter_char=",",
-        datasource_ascii_header_records=2,
-        datasource_ascii_quote_character="^",
-        datasource_ascii_thousand_separator="~",
-        prolog_procedure="sTestProlog = 'test prolog procedure';",
-        metadata_procedure="sTestMeta = 'test metadata procedure';",
-        data_procedure="sTestData =  'test data procedure';",
-        epilog_procedure="sTestEpilog = 'test epilog procedure';",
-        datasource_data_source_name_for_server=r"C:\Data\file.csv",
-        datasource_data_source_name_for_client=r"C:\Data\file.csv",
-    )
-    p_ascii.add_variable("v_1", "Numeric")
-    p_ascii.add_variable("v_2", "Numeric")
-    p_ascii.add_variable("v_3", "Numeric")
-    p_ascii.add_variable("v_4", "Numeric")
-    p_ascii.add_parameter("p_Year", "year?", "2016")
-    p_ascii.add_parameter("p_Number", "number?", 2)
-
-    p_view = Process(
-        name=prefix + "_view_" + some_name,
-        datasource_type="TM1CubeView",
-        datasource_view="view1",
-        datasource_data_source_name_for_client="Plan_BudgetPlan",
-        datasource_data_source_name_for_server="Plan_BudgetPlan",
-    )
-
-    p_odbc = Process(
-        name=prefix + "_odbc_" + some_name,
-        datasource_type="ODBC",
-        datasource_password="password",
-        datasource_user_name="user",
-    )
-
-    p_json = Process(
-        name=prefix + "_json_" + some_name,
-        datasource_type="JSON",
-        datasource_json_root_pointer="data",
-        datasource_json_variable_mapping="{}",
-        prolog_procedure="sTestProlog = 'test JSON prolog procedure';",
-        metadata_procedure="sTestMeta = 'test JSON metadata procedure';",
-        data_procedure="sTestData =  'test JSON data procedure';",
-        epilog_procedure="sTestEpilog = 'test JSON epilog procedure';",
-        datasource_data_source_name_for_server=r"C:\Data\file.json",
-        datasource_data_source_name_for_client=r"C:\Data\file.json",
-    )
-
-    p_debug = Process(
-        name=prefix + "_debug",
-        datasource_type="None",
-        prolog_procedure="sleep(1);\r\nsleep(1);\r\nsleep(1);\r\nsleep(1);\r\nsleep(1);\r\nsleep(1);\r\n",
-    )
-
-    subset: Subset
-    subset_name: str
-    p_subset: Process
-    p_error: Process
-
     @classmethod
     def setUpClass(cls):
         """
@@ -100,17 +36,86 @@ class TestProcessService(unittest.TestCase):
         cls.config.read(Path(__file__).parent.joinpath("config.ini"))
         cls.tm1 = TM1Service(**cls.config["tm1srv01"])
 
-        cls.all_dimension_names = cls.tm1.dimensions.get_all_names()
-        cls.random_dimension = cls.tm1.dimensions.get(random.choice(cls.all_dimension_names))
-        cls.random_dimension_all_elements = cls.random_dimension.default_hierarchy.elements
-        cls.random_dimension_elements = [element for element in cls.random_dimension_all_elements][0:2]
+        # Define unique names
+        cls.test_uuid = generate_test_uuid()
+        cls.prefix = "TM1py_Tests_"
+        cls.some_name = "some_name_" + cls.test_uuid
+        # unique prolog statement, so that searching in code only finds processes of this test run
+        cls.ascii_prolog_statement = "sTestProlog = 'test prolog procedure " + cls.test_uuid + "'"
+
+        cls.p_none = Process(name=cls.prefix + "_none_" + cls.some_name, datasource_type="None")
+        cls.p_ascii = Process(
+            name=cls.prefix + "_ascii_" + cls.some_name,
+            datasource_type="ASCII",
+            datasource_ascii_delimiter_type="Character",
+            datasource_ascii_delimiter_char=",",
+            datasource_ascii_header_records=2,
+            datasource_ascii_quote_character="^",
+            datasource_ascii_thousand_separator="~",
+            prolog_procedure=cls.ascii_prolog_statement + ";",
+            metadata_procedure="sTestMeta = 'test metadata procedure';",
+            data_procedure="sTestData =  'test data procedure';",
+            epilog_procedure="sTestEpilog = 'test epilog procedure';",
+            datasource_data_source_name_for_server=r"C:\Data\file.csv",
+            datasource_data_source_name_for_client=r"C:\Data\file.csv",
+        )
+        cls.p_ascii.add_variable("v_1", "Numeric")
+        cls.p_ascii.add_variable("v_2", "Numeric")
+        cls.p_ascii.add_variable("v_3", "Numeric")
+        cls.p_ascii.add_variable("v_4", "Numeric")
+        cls.p_ascii.add_parameter("p_Year", "year?", "2016")
+        cls.p_ascii.add_parameter("p_Number", "number?", 2)
+
+        cls.p_view = Process(
+            name=cls.prefix + "_view_" + cls.some_name,
+            datasource_type="TM1CubeView",
+            datasource_view="view1",
+            datasource_data_source_name_for_client="Plan_BudgetPlan",
+            datasource_data_source_name_for_server="Plan_BudgetPlan",
+        )
+
+        cls.p_odbc = Process(
+            name=cls.prefix + "_odbc_" + cls.some_name,
+            datasource_type="ODBC",
+            datasource_password="password",
+            datasource_user_name="user",
+        )
+
+        cls.p_json = Process(
+            name=cls.prefix + "_json_" + cls.some_name,
+            datasource_type="JSON",
+            datasource_json_root_pointer="data",
+            datasource_json_variable_mapping="{}",
+            prolog_procedure="sTestProlog = 'test JSON prolog procedure';",
+            metadata_procedure="sTestMeta = 'test JSON metadata procedure';",
+            data_procedure="sTestData =  'test JSON data procedure';",
+            epilog_procedure="sTestEpilog = 'test JSON epilog procedure';",
+            datasource_data_source_name_for_server=r"C:\Data\file.json",
+            datasource_data_source_name_for_client=r"C:\Data\file.json",
+        )
+
+        cls.p_debug = Process(
+            name=cls.prefix + "_debug_" + cls.test_uuid,
+            datasource_type="None",
+            prolog_procedure="sleep(1);\r\nsleep(1);\r\nsleep(1);\r\nsleep(1);\r\nsleep(1);\r\nsleep(1);\r\n",
+        )
+
+        # Own dimension for the subset process. Dimensions of other tests may be deleted while running in parallel
+        cls.dimension_name = cls.prefix + "_dimension_" + cls.some_name
+        dimension = Dimension(cls.dimension_name)
+        hierarchy = Hierarchy(cls.dimension_name, cls.dimension_name)
+        for element_name in ("Element 1", "Element 2", "Element 3"):
+            hierarchy.add_element(element_name, "Numeric")
+        dimension.add_hierarchy(hierarchy)
+        cls.tm1.dimensions.update_or_create(dimension)
+        cls.dimension_elements = ["Element 1", "Element 2"]
 
         # Subset process
         cls.subset_name = cls.prefix + "_subset_" + cls.some_name
         cls.subset = Subset(
-            dimension_name=cls.random_dimension.name,
+            dimension_name=cls.dimension_name,
             subset_name=cls.subset_name,
-            elements=cls.random_dimension_elements,
+            elements=cls.dimension_elements,
         )
         cls.tm1.dimensions.subsets.update_or_create(cls.subset, False)
         cls.p_subset = Process(
@@ -121,11 +126,12 @@ class TestProcessService(unittest.TestCase):
             metadata_procedure="sTest = 'abc';",
         )
 
-        cls.p_error = Process(name=cls.prefix + "_error")
+        cls.p_error = Process(name=cls.prefix + "_error_" + cls.test_uuid)
         cls.p_error.epilog_procedure = "ItemReject('just an error');"
 
         with open(Path(__file__).parent.joinpath("resources", "Bedrock.Server.Wait.json"), "r") as file:
             cls.p_bedrock_server_wait = Process.from_json(file.read())
+        cls.p_bedrock_server_wait.name = cls.p_bedrock_server_wait.name + "_" + cls.test_uuid
 
     def setUp(self):
         self.tm1.processes.update_or_create(self.p_none)
@@ -491,7 +497,7 @@ class TestProcessService(unittest.TestCase):
         self.assertEqual(len(content), 3)
 
     def test_delete_process(self):
-        process = self.p_bedrock_server_wait
+        process = copy.deepcopy(self.p_bedrock_server_wait)
         process.name = str(uuid.uuid4())
         self.tm1.processes.update_or_create(process)
         self.tm1.processes.delete(process.name)
@@ -517,15 +523,17 @@ class TestProcessService(unittest.TestCase):
         self.assertEqual([self.p_ascii.name], process_names)
 
     def test_search_string_in_code(self):
-        process_names = self.tm1.processes.search_string_in_code("sTestProlog = 'test prolog procedure'")
+        process_names = self.tm1.processes.search_string_in_code(self.ascii_prolog_statement)
         self.assertEqual([self.p_ascii.name], process_names)
 
     def test_search_string_in_code_space_insensitive(self):
-        process_names = self.tm1.processes.search_string_in_code("sTestProlog = 'test PROLOG procedure'")
+        process_names = self.tm1.processes.search_string_in_code(
+            self.ascii_prolog_statement.replace("prolog", "PROLOG").replace(" ", "  ")
+        )
         self.assertEqual([self.p_ascii.name], process_names)
 
     def test_get_all_names(self):
-        process = Process(name="}" + f"{self.prefix}_ControlProcess")
+        process = Process(name="}" + f"{self.prefix}_ControlProcess_{self.test_uuid}")
         process.epilog_procedure = "#Empty Process"
         self.tm1.processes.update_or_create(process)
         self.assertNotEqual(
@@ -711,9 +719,11 @@ class TestProcessService(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        cls.tm1.dimensions.subsets.delete(
-            dimension_name=cls.subset.dimension_name, subset_name=cls.subset_name, private=False
-        )
+        if cls.tm1.processes.exists(cls.p_bedrock_server_wait.name):
+            cls.tm1.processes.delete(cls.p_bedrock_server_wait.name)
+        # deleting the dimension removes the subset as well
+        if cls.tm1.dimensions.exists(cls.dimension_name):
+            cls.tm1.dimensions.delete(cls.dimension_name)
         cls.tm1.logout()
 
 
