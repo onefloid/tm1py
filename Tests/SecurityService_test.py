@@ -3,6 +3,7 @@ import unittest
 from base64 import b64encode
 from pathlib import Path
 
+from Tests.Utils import generate_test_uuid
 from TM1py.Exceptions import TM1pyRestException
 from TM1py.Objects import User
 from TM1py.Objects.User import UserType
@@ -15,16 +16,8 @@ from .Utils import skip_if_auth_not_basic, skip_if_version_higher_or_equal_than
 class TestSecurityService(unittest.TestCase):
     tm1: TM1Service
 
+    # All users and groups created by these tests start with this prefix
     prefix = "TM1py_Tests_"
-    user_name = prefix + "User1"
-    read_only_user_name = prefix + "Read_Only_user"
-    user_name_exotic_password = "UserWithExoticPassword"
-    enabled = True
-    user = User(name=user_name, groups=[], password="TM1py", enabled=enabled)
-    read_only_user = User(name=read_only_user_name, groups=[], password="TM1py", enabled=True)
-    group_name1 = prefix + "Group1"
-    group_name2 = prefix + "Group2"
-    user.add_group(group_name1)
 
     @classmethod
     def setUpClass(cls):
@@ -36,6 +29,21 @@ class TestSecurityService(unittest.TestCase):
         cls.config = configparser.ConfigParser()
         cls.config.read(Path(__file__).parent.joinpath("config.ini"))
         cls.tm1 = TM1Service(**cls.config["tm1srv01"])
+
+        # Define unique names
+        test_uuid = generate_test_uuid()
+        cls.user_name = cls.prefix + "User1_" + test_uuid
+        cls.user_name2 = cls.prefix + "User2_" + test_uuid
+        cls.read_only_user_name = cls.prefix + "Read_Only_user_" + test_uuid
+        cls.user_name_exotic_password = cls.prefix + "UserWithExoticPassword_" + test_uuid
+        cls.user_name_with_spaces = cls.prefix + "user name " + test_uuid
+        cls.enabled = True
+        cls.user = User(name=cls.user_name, groups=[], password="TM1py", enabled=cls.enabled)
+        cls.read_only_user = User(name=cls.read_only_user_name, groups=[], password="TM1py", enabled=True)
+        cls.group_name1 = cls.prefix + "Group1_" + test_uuid
+        cls.group_name2 = cls.prefix + "Group2_" + test_uuid
+        cls.group_name3 = cls.prefix + "Group3_" + test_uuid
+        cls.user.add_group(cls.group_name1)
 
         if cls.user_name in CaseAndSpaceInsensitiveSet(*cls.tm1.security.get_all_user_names()):
             cls.tm1.security.delete_user(cls.user_name)
@@ -58,13 +66,24 @@ class TestSecurityService(unittest.TestCase):
                 cube_name="}ClientProperties", cellset_as_dict={(self.read_only_user_name, "ReadOnlyUser"): 1}
             )
 
+    @classmethod
+    def without_parallel_test_objects(cls, names) -> list:
+        """
+        Remove users and groups created by tests that may run in parallel.
+        Required to compare lists of all users / groups that are retrieved with separate requests.
+        """
+        return sorted(name for name in names if not name.lower().startswith(cls.prefix.lower()))
+
     def tearDown(self):
         self.tm1.security.delete_user(self.user_name)
         self.tm1.security.delete_user(self.read_only_user_name)
         self.tm1.security.delete_group(self.group_name1)
         self.tm1.security.delete_group(self.group_name2)
-        if self.user_name_exotic_password in self.tm1.security.get_all_user_names():
-            self.tm1.security.delete_user(self.user_name_exotic_password)
+        for user_name in (self.user_name_exotic_password, self.user_name2, self.user_name_with_spaces):
+            if self.tm1.security.user_exists(user_name):
+                self.tm1.security.delete_user(user_name)
+        if self.tm1.security.group_exists(self.group_name3):
+            self.tm1.security.delete_group(self.group_name3)
 
     def test_get_user(self):
         u = self.tm1.security.get_user(self.user_name)
@@ -177,14 +196,16 @@ class TestSecurityService(unittest.TestCase):
         all_clients = self.tm1.dimensions.hierarchies.elements.get_element_names("}Clients", "}Clients")
         self.assertGreater(len(all_users), 0)
         self.assertIn(self.user_name, all_users)
-        self.assertEqual(sorted(all_users), sorted(all_clients))
+        self.assertIn(self.user_name, all_clients)
+        self.assertEqual(self.without_parallel_test_objects(all_users), self.without_parallel_test_objects(all_clients))
 
     def test_get_all_user_names(self):
         all_users = self.tm1.security.get_all_user_names()
         all_clients = self.tm1.dimensions.hierarchies.elements.get_element_names("}Clients", "}Clients")
         self.assertGreater(len(all_users), 0)
         self.assertIn(self.user_name, all_users)
-        self.assertEqual(sorted(all_users), sorted(all_clients))
+        self.assertIn(self.user_name, all_clients)
+        self.assertEqual(self.without_parallel_test_objects(all_users), self.without_parallel_test_objects(all_clients))
 
     def test_add_user_to_groups(self):
         self.tm1.security.add_user_to_groups(self.user_name, (self.group_name2,))
@@ -218,7 +239,7 @@ class TestSecurityService(unittest.TestCase):
         clients = self.tm1.elements.execute_set_mdx_element_names(mdx)
         self.assertGreater(len(users), 0)
         self.assertGreater(len(clients), 0)
-        self.assertEqual(sorted(users), sorted(clients))
+        self.assertEqual(self.without_parallel_test_objects(users), self.without_parallel_test_objects(clients))
 
     def test_get_user_names_from_group(self):
         users = self.tm1.security.get_user_names_from_group(self.group_name1)
@@ -243,10 +264,11 @@ class TestSecurityService(unittest.TestCase):
 
     def test_get_groups(self):
         groups = self.tm1.security.get_all_groups()
+        group_elements = self.tm1.dimensions.hierarchies.elements.get_element_names("}Groups", "}Groups")
         self.assertGreater(len(groups), 0)
-        self.assertEqual(
-            sorted(groups), sorted(self.tm1.dimensions.hierarchies.elements.get_element_names("}Groups", "}Groups"))
-        )
+        self.assertIn(self.group_name1, groups)
+        self.assertIn(self.group_name1, group_elements)
+        self.assertEqual(self.without_parallel_test_objects(groups), self.without_parallel_test_objects(group_elements))
 
     def test_security_refresh(self):
         response = self.tm1.security.security_refresh()
@@ -270,7 +292,7 @@ class TestSecurityService(unittest.TestCase):
             self.assertEqual(tm1_second_conn.whoami.name, user.name)
 
     def test_create_and_delete_user(self):
-        u = User(name=self.prefix + "User2", groups=())
+        u = User(name=self.user_name2, groups=())
         all_users = self.tm1.security.get_all_user_names()
         if u.name not in CaseAndSpaceInsensitiveSet(*all_users):
             self.tm1.security.create_user(u)
@@ -282,7 +304,7 @@ class TestSecurityService(unittest.TestCase):
         self.assertNotIn(u.name, CaseAndSpaceInsensitiveSet(*users_after_delete))
 
     def test_create_and_delete_group(self):
-        group = self.prefix + "Group3"
+        group = self.group_name3
         groups = self.tm1.security.get_all_groups()
         if group not in CaseAndSpaceInsensitiveSet(*groups):
             self.tm1.security.create_group(group)
@@ -296,7 +318,7 @@ class TestSecurityService(unittest.TestCase):
     @skip_if_auth_not_basic
     @skip_if_version_higher_or_equal_than(version="12")
     def test_tm1service_with_encrypted_password_decode_b64_as_string(self):
-        user_name = "TM1py user name"
+        user_name = self.user_name_with_spaces
         user = User(name=user_name, groups=["ADMIN"], password="apple")
         if user.name in self.tm1.security.get_all_user_names():
             self.tm1.security.delete_user(user_name)
@@ -317,7 +339,7 @@ class TestSecurityService(unittest.TestCase):
     @skip_if_auth_not_basic
     @skip_if_version_higher_or_equal_than(version="12")
     def test_tm1service_without_encrypted_password(self):
-        user_name = "TM1py user name"
+        user_name = self.user_name_with_spaces
         user = User(name=user_name, groups=["ADMIN"], password="apple")
         if user.name in self.tm1.security.get_all_user_names():
             self.tm1.security.delete_user(user_name)
@@ -338,7 +360,7 @@ class TestSecurityService(unittest.TestCase):
     @skip_if_auth_not_basic
     @skip_if_version_higher_or_equal_than(version="12")
     def test_tm1service_with_encrypted_password(self):
-        user_name = "TM1py user name"
+        user_name = self.user_name_with_spaces
         user = User(name=user_name, groups=["ADMIN"], password="apple")
         if user.name in self.tm1.security.get_all_user_names():
             self.tm1.security.delete_user(user_name)
@@ -358,7 +380,7 @@ class TestSecurityService(unittest.TestCase):
 
     @skip_if_version_higher_or_equal_than(version="12")
     def test_tm1service_with_encrypted_password_fail(self):
-        user_name = "TM1py user name"
+        user_name = self.user_name_with_spaces
         user = User(name=user_name, groups=["ADMIN"], password="apple")
         if user.name in self.tm1.security.get_all_user_names():
             self.tm1.security.delete_user(user_name)
@@ -379,7 +401,7 @@ class TestSecurityService(unittest.TestCase):
     @skip_if_auth_not_basic
     @skip_if_version_higher_or_equal_than(version="12")
     def test_tm1service_with_plain_password(self):
-        user_name = "TM1py user name"
+        user_name = self.user_name_with_spaces
         user = User(name=user_name, groups=["ADMIN"], password="apple")
         if user.name in self.tm1.security.get_all_user_names():
             self.tm1.security.delete_user(user_name)
@@ -394,7 +416,7 @@ class TestSecurityService(unittest.TestCase):
 
     @skip_if_version_higher_or_equal_than(version="12")
     def test_tm1service_with_plain_password_fail(self):
-        user_name = "TM1py user name"
+        user_name = self.user_name_with_spaces
         user = User(name=user_name, groups=["ADMIN"], password="apple")
         if user.name in self.tm1.security.get_all_user_names():
             self.tm1.security.delete_user(user_name)
@@ -449,8 +471,9 @@ class TestSecurityService(unittest.TestCase):
     def test_get_read_only_users(self):
         read_only_users = self.tm1.security.get_read_only_users()
 
-        self.assertEqual(1, len(read_only_users))
-        self.assertEqual(self.read_only_user_name, read_only_users[0])
+        # other tests running in parallel may create read only users as well
+        self.assertIn(self.read_only_user_name, read_only_users)
+        self.assertNotIn(self.user_name, read_only_users)
 
     @skip_if_auth_not_basic
     @skip_if_version_higher_or_equal_than(version="12")
