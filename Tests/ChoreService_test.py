@@ -6,6 +6,7 @@ import uuid
 from datetime import datetime
 from pathlib import Path
 
+from Tests.Utils import generate_test_uuid
 from TM1py.Objects import Chore, ChoreFrequency, ChoreStartTime, ChoreTask, Process
 from TM1py.Services import TM1Service
 
@@ -14,26 +15,6 @@ from .Utils import skip_if_version_lower_than
 
 class TestChoreService(unittest.TestCase):
     tm1: TM1Service
-    prefix = "TM1py_Tests_Chore_"
-    process_name1 = prefix + "Process1"
-    process_name2 = prefix + "Process2"
-    chore_name1 = prefix + "Chore1"
-    chore_name2 = prefix + "Chore2"
-    chore_name3 = prefix + "Chore3"
-    chore_name4 = prefix + "Chore4"
-    start_time = datetime.now()
-    frequency_days = int(random.uniform(0, 355))
-    frequency_hours = int(random.uniform(0, 23))
-    frequency_minutes = int(random.uniform(0, 59))
-    frequency_seconds = int(random.uniform(0, 59))
-    frequency = ChoreFrequency(
-        days=frequency_days, hours=frequency_hours, minutes=frequency_minutes, seconds=frequency_seconds
-    )
-    tasks = [
-        ChoreTask(0, process_name1, parameters=[{"Name": "pRegion", "Value": "UK"}]),
-        ChoreTask(1, process_name1, parameters=[{"Name": "pRegion", "Value": "FR"}]),
-        ChoreTask(2, process_name1, parameters=[{"Name": "pRegion", "Value": "CH"}]),
-    ]
 
     @classmethod
     def setUpClass(cls):
@@ -45,6 +26,35 @@ class TestChoreService(unittest.TestCase):
         cls.config = configparser.ConfigParser()
         cls.config.read(Path(__file__).parent.joinpath("config.ini"))
         cls.tm1 = TM1Service(**cls.config["tm1srv01"])
+
+        # Define unique names
+        test_uuid = generate_test_uuid()
+        cls.prefix = "TM1py_Tests_Chore_"
+        cls.process_name1 = cls.prefix + "Process1_" + test_uuid
+        cls.process_name2 = cls.prefix + "Process2_" + test_uuid
+        cls.chore_name1 = cls.prefix + "Chore1_" + test_uuid
+        cls.chore_name2 = cls.prefix + "Chore2_" + test_uuid
+        cls.chore_name3 = cls.prefix + "Chore3_" + test_uuid
+        cls.chore_name4 = cls.prefix + "Chore4_" + test_uuid
+        # unique parameter value, so that searching for it only finds chores of this test run
+        cls.unique_region = "UK_" + test_uuid
+
+        cls.start_time = datetime.now()
+        cls.frequency_days = int(random.uniform(0, 355))
+        cls.frequency_hours = int(random.uniform(0, 23))
+        cls.frequency_minutes = int(random.uniform(0, 59))
+        cls.frequency_seconds = int(random.uniform(0, 59))
+        cls.frequency = ChoreFrequency(
+            days=cls.frequency_days,
+            hours=cls.frequency_hours,
+            minutes=cls.frequency_minutes,
+            seconds=cls.frequency_seconds,
+        )
+        cls.tasks = [
+            ChoreTask(0, cls.process_name1, parameters=[{"Name": "pRegion", "Value": cls.unique_region}]),
+            ChoreTask(1, cls.process_name1, parameters=[{"Name": "pRegion", "Value": "FR"}]),
+            ChoreTask(2, cls.process_name1, parameters=[{"Name": "pRegion", "Value": "CH"}]),
+        ]
 
         # create processes
         p1 = Process(name=cls.process_name1)
@@ -238,7 +248,7 @@ class TestChoreService(unittest.TestCase):
         self.assertEqual([], chore_names)
 
     def test_search_for_parameter_value_happy_case(self):
-        chore_names = self.tm1.chores.search_for_parameter_value(parameter_value="UK")
+        chore_names = self.tm1.chores.search_for_parameter_value(parameter_value=self.unique_region)
         self.assertEqual(2, len(chore_names))
         self.assertEqual(self.chore_name1, chore_names[0].name)
         self.assertEqual(self.chore_name2, chore_names[1].name)
