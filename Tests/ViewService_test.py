@@ -3,6 +3,7 @@ import random
 import unittest
 from pathlib import Path
 
+from Tests.Utils import generate_test_uuid
 from TM1py.Objects import (
     AnonymousSubset,
     Cube,
@@ -18,20 +19,6 @@ from TM1py.Services import TM1Service
 
 class TestViewService(unittest.TestCase):
     tm1: TM1Service
-
-    cube_name = "TM1py_Tests_View_Cube"
-    dimension_names = ["TM1py_Tests_View_Dimension1", "TM1py_Tests_View_Dimension2", "TM1py_Tests_View_Dimension3"]
-    subset_name = "TM1py_Tests_View_Subset"
-    native_view_name = "TM1py_Tests_Native_View"
-    mdx_view_name = "TM1py_Tests_Mdx_View"
-    mdx_view_with_dynamic_properties_name = "TM1py_Tests_Mdx_View_With_dynamic_properties"
-    native_view_with_dynamic_properties_name = "TM1py_Tests_Native_View_With_dynamic_properties"
-    all_view_names = [
-        native_view_name,
-        mdx_view_name,
-        mdx_view_with_dynamic_properties_name,
-        native_view_with_dynamic_properties_name,
-    ]
 
     @classmethod
     def build_dynamic_properties(cls, expanded: bool = False):
@@ -55,6 +42,26 @@ class TestViewService(unittest.TestCase):
         cls.config = configparser.ConfigParser()
         cls.config.read(Path(__file__).parent.joinpath("config.ini"))
         cls.tm1 = TM1Service(**cls.config["tm1srv01"])
+
+        # Define unique names
+        test_uuid = generate_test_uuid()
+        cls.cube_name = "TM1py_Tests_View_Cube_" + test_uuid
+        cls.dimension_names = [
+            "TM1py_Tests_View_Dimension1_" + test_uuid,
+            "TM1py_Tests_View_Dimension2_" + test_uuid,
+            "TM1py_Tests_View_Dimension3_" + test_uuid,
+        ]
+        cls.subset_name = "TM1py_Tests_View_Subset_" + test_uuid
+        cls.native_view_name = "TM1py_Tests_Native_View_" + test_uuid
+        cls.mdx_view_name = "TM1py_Tests_Mdx_View_" + test_uuid
+        cls.mdx_view_with_dynamic_properties_name = "TM1py_Tests_Mdx_View_With_dynamic_properties_" + test_uuid
+        cls.native_view_with_dynamic_properties_name = "TM1py_Tests_Native_View_With_dynamic_properties_" + test_uuid
+        cls.all_view_names = [
+            cls.native_view_name,
+            cls.mdx_view_name,
+            cls.mdx_view_with_dynamic_properties_name,
+            cls.native_view_with_dynamic_properties_name,
+        ]
 
         # Build Dimensions
         for i in range(3):
