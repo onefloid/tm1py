@@ -4,6 +4,7 @@ import unittest
 from _datetime import datetime
 from pathlib import Path
 
+from Tests.Utils import generate_test_uuid
 from TM1py import (
     AnonymousSubset,
     Chore,
@@ -38,19 +39,6 @@ from .Utils import skip_if_version_lower_than, verify_version
 
 class TestApplicationService(unittest.TestCase):
     tm1: TM1Service
-    prefix = "TM1py_Tests_Applications_"
-    tm1py_app_folder = prefix + "RootFolder"
-    application_name = prefix + "Application"
-    cube_name = prefix + "Cube"
-    view_name = prefix + "View"
-    subset_name = prefix + "Subset"
-    process_name = prefix + "Process"
-    chore_name = prefix + "Chore"
-    folder_name = prefix + "Folder"
-    link_name = prefix + "Link"
-    document_name = prefix + "Document"
-    dimension_names = [prefix + "Dimension1", prefix + "Dimension2", prefix + "Dimension3"]
-
     rename_suffix = "_New"
 
     @classmethod
@@ -63,6 +51,20 @@ class TestApplicationService(unittest.TestCase):
         cls.config = configparser.ConfigParser()
         cls.config.read(Path(__file__).parent.joinpath("config.ini"))
         cls.tm1 = TM1Service(**cls.config["tm1srv01"])
+
+        # Define unique names. All names used in the tests are derived from the unique prefix
+        cls.prefix = "TM1py_Tests_Applications_" + generate_test_uuid() + "_"
+        cls.tm1py_app_folder = cls.prefix + "RootFolder"
+        cls.application_name = cls.prefix + "Application"
+        cls.cube_name = cls.prefix + "Cube"
+        cls.view_name = cls.prefix + "View"
+        cls.subset_name = cls.prefix + "Subset"
+        cls.process_name = cls.prefix + "Process"
+        cls.chore_name = cls.prefix + "Chore"
+        cls.folder_name = cls.prefix + "Folder"
+        cls.link_name = cls.prefix + "Link"
+        cls.document_name = cls.prefix + "Document"
+        cls.dimension_names = [cls.prefix + "Dimension1", cls.prefix + "Dimension2", cls.prefix + "Dimension3"]
 
         # Build Dimensions
         for dimension_name in cls.dimension_names:
