@@ -10,6 +10,7 @@ from mdxpy import (
     Member,
 )
 
+from Tests.Utils import generate_test_uuid
 from TM1py import Sandbox
 from TM1py.Exceptions.Exceptions import (
     TM1pyException,
@@ -51,35 +52,13 @@ except ImportError:
 
 class TestCellService(unittest.TestCase):
     tm1: TM1Service
-    prefix = "TM1py_Tests_Cell_"
-    cube_name = prefix + "Cube"
-    view_name = prefix + "View"
-    mdx_view_name = prefix + "MdxView"
-    mdx_view_2_name = prefix + "MdxView2"
-    dimension_names = [prefix + "Dimension1", prefix + "Dimension2", prefix + "Dimension3"]
-    string_cube_name = prefix + "StringCube"
-    string_dimension_names = [prefix + "StringDimension1", prefix + "StringDimension2", prefix + "StringDimension3"]
     cells_in_string_cube = {
         ("d1e1", "d2e1", "d3e1"): "String1",
         ("d1e2", "d2e2", "d3e2"): "String2",
         ("d1e3", "d2e3", "d3e3"): "String3",
     }
 
-    latin_1_encoded_text = "Èd5áÂè"
-
-    cube_rps1_name = prefix + "Cube" + "_RPS1"
-    cube_rps2_name = prefix + "Cube" + "_RPS2"
-
-    cube_with_consolidations_name = cube_name + "_With_Consolidations"
-    dimensions_with_consolidations_names = [
-        dimension_name + "_With_Consolidations" for dimension_name in dimension_names
-    ]
-    cube_with_rules_name = cube_name + "_With_Rules"
-
-    dimension_rps1_name = prefix + "Dimension" + "_RPS1"
-    dimension_rps2_name = prefix + "Dimension" + "_RPS2"
-
-    sandbox_name = prefix + "sandbox"
+    latin_1_encoded_text = "Èd5áÂè"
 
     target_coordinates = list(
         zip(
@@ -89,17 +68,48 @@ class TestCellService(unittest.TestCase):
         )
     )
 
-    dimension_with_hierarchies_name = prefix + "Dimension_With_Hierarchies"
+    @classmethod
+    def define_names(cls):
+        """
+        Define unique names for all TM1 objects used in the tests
+        """
+        test_uuid = generate_test_uuid()
+        cls.prefix = "TM1py_Tests_Cell_"
+        cls.cube_name = cls.prefix + "Cube_" + test_uuid
+        cls.view_name = cls.prefix + "View_" + test_uuid
+        cls.mdx_view_name = cls.prefix + "MdxView_" + test_uuid
+        cls.mdx_view_2_name = cls.prefix + "MdxView2_" + test_uuid
+        cls.dimension_names = [
+            cls.prefix + "Dimension1_" + test_uuid,
+            cls.prefix + "Dimension2_" + test_uuid,
+            cls.prefix + "Dimension3_" + test_uuid,
+        ]
+        cls.string_cube_name = cls.prefix + "StringCube_" + test_uuid
+        cls.string_dimension_names = [
+            cls.prefix + "StringDimension1_" + test_uuid,
+            cls.prefix + "StringDimension2_" + test_uuid,
+            cls.prefix + "StringDimension3_" + test_uuid,
+        ]
 
-    cube_with_five_dimensions = prefix + "Cube_with_five_dimensions"
+        cls.cube_rps1_name = cls.prefix + "Cube_RPS1_" + test_uuid
+        cls.cube_rps2_name = cls.prefix + "Cube_RPS2_" + test_uuid
 
-    five_dimensions = [
-        cube_with_five_dimensions + "_" + str(1),
-        cube_with_five_dimensions + "_" + str(2),
-        cube_with_five_dimensions + "_" + str(3),
-        cube_with_five_dimensions + "_" + str(4),
-        cube_with_five_dimensions + "_" + str(5),
-    ]
+        cls.cube_with_consolidations_name = cls.cube_name + "_With_Consolidations"
+        cls.dimensions_with_consolidations_names = [
+            dimension_name + "_With_Consolidations" for dimension_name in cls.dimension_names
+        ]
+        cls.cube_with_rules_name = cls.cube_name + "_With_Rules"
+
+        cls.dimension_rps1_name = cls.prefix + "Dimension_RPS1_" + test_uuid
+        cls.dimension_rps2_name = cls.prefix + "Dimension_RPS2_" + test_uuid
+
+        cls.sandbox_name = cls.prefix + "sandbox_" + test_uuid
+
+        cls.dimension_with_hierarchies_name = cls.prefix + "Dimension_With_Hierarchies_" + test_uuid
+
+        cls.cube_with_five_dimensions = cls.prefix + "Cube_with_five_dimensions_" + test_uuid
+
+        cls.five_dimensions = [cls.cube_with_five_dimensions + "_" + str(i) for i in range(1, 6)]
 
     @classmethod
     def setUpClass(cls):
@@ -111,6 +121,8 @@ class TestCellService(unittest.TestCase):
         cls.config = configparser.ConfigParser()
         cls.config.read(Path(__file__).parent.joinpath("config.ini"))
         cls.tm1 = TM1Service(**cls.config["tm1srv01"])
+
+        cls.define_names()
 
         # Build Dimensions
         for dimension_name in cls.dimension_names:
@@ -543,7 +555,7 @@ class TestCellService(unittest.TestCase):
     def test_write_use_blob_allow_spread(self):
         cells = {
             ("Element 1", "Element4", "Element9"): 1,
-            ("Element 1", "Element4", "TOTAL_TM1py_Tests_Cell_Dimension3_With_Consolidations"): 54321,
+            ("Element 1", "Element4", "TOTAL_" + self.dimensions_with_consolidations_names[2]): 54321,
         }
         try:
             self.tm1.cells.write(self.cube_with_consolidations_name, cells, use_blob=True, allow_spread=True)
@@ -555,7 +567,7 @@ class TestCellService(unittest.TestCase):
         query.add_member_tuple_to_columns(
             f"[{self.dimensions_with_consolidations_names[0]}].[Element 1]",
             f"[{self.dimensions_with_consolidations_names[1]}].[Element 4]",
-            f"[{self.dimensions_with_consolidations_names[2]}].[TOTAL_TM1py_Tests_Cell_Dimension3_With_Consolidations]",
+            f"[{self.dimensions_with_consolidations_names[2]}].[TOTAL_{self.dimensions_with_consolidations_names[2]}]",
         )
 
         self.assertAlmostEqual(54321, self.tm1.cells.execute_mdx_values(mdx=query.to_mdx())[0], delta=0.0001)
@@ -563,7 +575,7 @@ class TestCellService(unittest.TestCase):
     def test_write_use_ti_allow_spread(self):
         cells = {
             ("Element 1", "Element4", "Element9"): 1,
-            ("Element 1", "Element4", "TOTAL_TM1py_Tests_Cell_Dimension3_With_Consolidations"): 54321,
+            ("Element 1", "Element4", "TOTAL_" + self.dimensions_with_consolidations_names[2]): 54321,
         }
         try:
             self.tm1.cells.write(self.cube_with_consolidations_name, cells, use_ti=True, allow_spread=True)
@@ -575,7 +587,7 @@ class TestCellService(unittest.TestCase):
         query.add_member_tuple_to_columns(
             f"[{self.dimensions_with_consolidations_names[0]}].[Element 1]",
             f"[{self.dimensions_with_consolidations_names[1]}].[Element 4]",
-            f"[{self.dimensions_with_consolidations_names[2]}].[TOTAL_TM1py_Tests_Cell_Dimension3_With_Consolidations]",
+            f"[{self.dimensions_with_consolidations_names[2]}].[TOTAL_{self.dimensions_with_consolidations_names[2]}]",
         )
 
         self.assertAlmostEqual(54321, self.tm1.cells.execute_mdx_values(mdx=query.to_mdx())[0], delta=0.0001)
@@ -1811,9 +1823,9 @@ class TestCellService(unittest.TestCase):
         self.assertEqual(self.total_value, sum(v["Value"] for v in data.values() if v["Value"]))
         for coordinates in data.keys():
             self.assertEqual(len(coordinates), 3)
-            self.assertIn("[TM1py_Tests_Cell_Dimension1].", coordinates[0])
-            self.assertIn("[TM1py_Tests_Cell_Dimension2].", coordinates[1])
-            self.assertIn("[TM1py_Tests_Cell_Dimension3].", coordinates[2])
+            self.assertIn(f"[{self.dimension_names[0]}].", coordinates[0])
+            self.assertIn(f"[{self.dimension_names[1]}].", coordinates[1])
+            self.assertIn(f"[{self.dimension_names[2]}].", coordinates[2])
 
     def test_execute_mdx_without_rows(self):
         self.run_test_execute_mdx_without_rows(max_workers=1)
@@ -1845,9 +1857,9 @@ class TestCellService(unittest.TestCase):
         self.assertEqual(self.total_value, sum(v["Value"] for v in data.values() if v["Value"]))
         for coordinates in data.keys():
             self.assertEqual(len(coordinates), 3)
-            self.assertIn("[TM1py_Tests_Cell_Dimension1].", coordinates[0])
-            self.assertIn("[TM1py_Tests_Cell_Dimension2].", coordinates[1])
-            self.assertIn("[TM1py_Tests_Cell_Dimension3].", coordinates[2])
+            self.assertIn(f"[{self.dimension_names[0]}].", coordinates[0])
+            self.assertIn(f"[{self.dimension_names[1]}].", coordinates[1])
+            self.assertIn(f"[{self.dimension_names[2]}].", coordinates[2])
 
     @skip_if_version_higher_or_equal_than(version="12")
     # v12 does not support empty row sets
@@ -1884,9 +1896,9 @@ class TestCellService(unittest.TestCase):
         self.assertEqual(self.total_value, sum(v["Value"] for v in data.values() if v["Value"]))
         for coordinates in data.keys():
             self.assertEqual(len(coordinates), 3)
-            self.assertIn("[TM1py_Tests_Cell_Dimension1].", coordinates[0])
-            self.assertIn("[TM1py_Tests_Cell_Dimension2].", coordinates[1])
-            self.assertIn("[TM1py_Tests_Cell_Dimension3].", coordinates[2])
+            self.assertIn(f"[{self.dimension_names[0]}].", coordinates[0])
+            self.assertIn(f"[{self.dimension_names[1]}].", coordinates[1])
+            self.assertIn(f"[{self.dimension_names[2]}].", coordinates[2])
 
     @skip_if_version_higher_or_equal_than(version="12")
     def test_execute_mdx_with_empty_columns(self):
@@ -3123,11 +3135,11 @@ class TestCellService(unittest.TestCase):
         )
 
         expected = {
-            "TM1py_Tests_Cell_Dimension3": {0: "Element 1"},
+            self.dimension_names[2]: {0: "Element 1"},
             "Attr3": {0: 3},
-            "TM1py_Tests_Cell_Dimension2": {0: "Element 1"},
+            self.dimension_names[1]: {0: "Element 1"},
             "Attr2": {0: 2},
-            "TM1py_Tests_Cell_Dimension1": {0: "Element 1"},
+            self.dimension_names[0]: {0: "Element 1"},
             "Attr1": {0: "TM1py"},
             "Value": {0: 1},
         }
@@ -3154,11 +3166,11 @@ class TestCellService(unittest.TestCase):
         )
 
         expected = {
-            "TM1py_Tests_Cell_Dimension3": {0: "Element 1"},
+            self.dimension_names[2]: {0: "Element 1"},
             "Attr3": {0: 3},
-            "TM1py_Tests_Cell_Dimension2": {0: "Element 1"},
+            self.dimension_names[1]: {0: "Element 1"},
             "Attr2": {0: 2},
-            "TM1py_Tests_Cell_Dimension1": {0: "Element 1"},
+            self.dimension_names[0]: {0: "Element 1"},
             "Attr1": {0: "TM1py"},
             "Value": {0: 1},
         }
@@ -3184,11 +3196,11 @@ class TestCellService(unittest.TestCase):
 
         df_test = pd.DataFrame(
             {
-                "TM1py_Tests_Cell_Dimension1": {0: "Element 1"},
+                self.dimension_names[0]: {0: "Element 1"},
                 "Attr1": {0: "TM1py"},
-                "TM1py_Tests_Cell_Dimension2": {0: "Element 1"},
+                self.dimension_names[1]: {0: "Element 1"},
                 "Attr2": {0: 2},
-                "TM1py_Tests_Cell_Dimension3": {0: "Element 1"},
+                self.dimension_names[2]: {0: "Element 1"},
                 "Attr3": {0: 3},
                 "Value": {0: 1},
             }
@@ -3210,9 +3222,9 @@ class TestCellService(unittest.TestCase):
         df = self.tm1.cells.execute_mdx_dataframe(mdx, include_attributes=True, use_iterative_json=True)
 
         expected = {
-            "TM1py_Tests_Cell_Dimension1": {0: "Element 2"},
-            "TM1py_Tests_Cell_Dimension2": {0: "Element 2"},
-            "TM1py_Tests_Cell_Dimension3": {0: "Element 2"},
+            self.dimension_names[0]: {0: "Element 2"},
+            self.dimension_names[1]: {0: "Element 2"},
+            self.dimension_names[2]: {0: "Element 2"},
             "Value": {0: 1.0},
         }
         self.assertEqual(expected, df.to_dict())
@@ -3334,8 +3346,8 @@ class TestCellService(unittest.TestCase):
 
         expected_df = pd.DataFrame(
             {
-                "TM1py_Tests_Cell_Dimension1": {0: "Element 3"},
-                "TM1py_Tests_Cell_Dimension2": {0: "Element 3"},
+                self.dimension_names[0]: {0: "Element 3"},
+                self.dimension_names[1]: {0: "Element 3"},
                 "Value": {0: 1.0},
             }
         )
@@ -4884,7 +4896,7 @@ class TestCellService(unittest.TestCase):
         result = self.tm1.cells.trace_cell_calculation(
             cube_name=self.cube_with_rules_name,
             elements=["Element1", "Element1", "Element1"],
-            dimensions=["TM1py_Tests_Cell_Dimension1", "TM1py_Tests_Cell_Dimension2", "TM1py_Tests_Cell_Dimension3"],
+            dimensions=self.dimension_names,
         )
 
         self.assertIn("../$metadata#ibm.tm1.api.v1.CalculationComponent", result["@odata.context"])
@@ -4921,7 +4933,7 @@ class TestCellService(unittest.TestCase):
         result = self.tm1.cells.trace_cell_calculation(
             cube_name=self.cube_with_rules_name,
             elements="Element1,Element1,Element1",
-            dimensions=["TM1py_Tests_Cell_Dimension1", "TM1py_Tests_Cell_Dimension2", "TM1py_Tests_Cell_Dimension3"],
+            dimensions=self.dimension_names,
         )
 
         self.assertIn("../$metadata#ibm.tm1.api.v1.CalculationComponent", result["@odata.context"])
@@ -4929,10 +4941,10 @@ class TestCellService(unittest.TestCase):
     def test_trace_cell_calculation_dimensions_string_hierarchy(self):
         result = self.tm1.cells.trace_cell_calculation(
             cube_name=self.cube_with_rules_name,
-            elements="TM1py_Tests_Cell_Dimension1::Element1,"
-            "TM1py_Tests_Cell_Dimension2::Element3,"
-            "TM1py_Tests_Cell_Dimension3::Element1",
-            dimensions=["TM1py_Tests_Cell_Dimension1", "TM1py_Tests_Cell_Dimension2", "TM1py_Tests_Cell_Dimension3"],
+            elements=f"{self.dimension_names[0]}::Element1,"
+            f"{self.dimension_names[1]}::Element3,"
+            f"{self.dimension_names[2]}::Element1",
+            dimensions=self.dimension_names,
         )
 
         self.assertIn("../$metadata#ibm.tm1.api.v1.CalculationComponent", result["@odata.context"])
@@ -4940,10 +4952,10 @@ class TestCellService(unittest.TestCase):
     def test_trace_cell_calculation_dimensions_string_multi_hierarchy(self):
         result = self.tm1.cells.trace_cell_calculation(
             cube_name=self.cube_with_rules_name,
-            elements="TM1py_Tests_Cell_Dimension1::Element1 && TM1py_Tests_Cell_Dimension1::Element1,"
-            "TM1py_Tests_Cell_Dimension2::Element3,"
-            "TM1py_Tests_Cell_Dimension3::Element1",
-            dimensions=["TM1py_Tests_Cell_Dimension1", "TM1py_Tests_Cell_Dimension2", "TM1py_Tests_Cell_Dimension3"],
+            elements=f"{self.dimension_names[0]}::Element1 && {self.dimension_names[0]}::Element1,"
+            f"{self.dimension_names[1]}::Element3,"
+            f"{self.dimension_names[2]}::Element1",
+            dimensions=self.dimension_names,
         )
 
         self.assertIn("../$metadata#ibm.tm1.api.v1.CalculationComponent", result["@odata.context"])
@@ -4959,7 +4971,7 @@ class TestCellService(unittest.TestCase):
         result = self.tm1.cells.trace_cell_feeders(
             cube_name=self.cube_with_rules_name,
             elements="Element1,Element1,Element1",
-            dimensions=["TM1py_Tests_Cell_Dimension1", "TM1py_Tests_Cell_Dimension2", "TM1py_Tests_Cell_Dimension3"],
+            dimensions=self.dimension_names,
         )
 
         self.assertIn("../$metadata#ibm.tm1.api.v1.FeederTrace", result["@odata.context"])
@@ -4967,10 +4979,10 @@ class TestCellService(unittest.TestCase):
     def test_trace_feeders_dimensions_string_hierarchy(self):
         result = self.tm1.cells.trace_cell_feeders(
             cube_name=self.cube_with_rules_name,
-            elements="TM1py_Tests_Cell_Dimension1::Element1,"
-            "TM1py_Tests_Cell_Dimension2::Element3,"
-            "TM1py_Tests_Cell_Dimension3::Element1",
-            dimensions=["TM1py_Tests_Cell_Dimension1", "TM1py_Tests_Cell_Dimension2", "TM1py_Tests_Cell_Dimension3"],
+            elements=f"{self.dimension_names[0]}::Element1,"
+            f"{self.dimension_names[1]}::Element3,"
+            f"{self.dimension_names[2]}::Element1",
+            dimensions=self.dimension_names,
         )
 
         self.assertIn("../$metadata#ibm.tm1.api.v1.FeederTrace", result["@odata.context"])
@@ -4978,10 +4990,10 @@ class TestCellService(unittest.TestCase):
     def test_trace_feeders_dimensions_string_multi_hierarchy(self):
         result = self.tm1.cells.trace_cell_feeders(
             cube_name=self.cube_with_rules_name,
-            elements="TM1py_Tests_Cell_Dimension1::Element1 && TM1py_Tests_Cell_Dimension1::Element1,"
-            "TM1py_Tests_Cell_Dimension2::Element3,"
-            "TM1py_Tests_Cell_Dimension3::Element1",
-            dimensions=["TM1py_Tests_Cell_Dimension1", "TM1py_Tests_Cell_Dimension2", "TM1py_Tests_Cell_Dimension3"],
+            elements=f"{self.dimension_names[0]}::Element1 && {self.dimension_names[0]}::Element1,"
+            f"{self.dimension_names[1]}::Element3,"
+            f"{self.dimension_names[2]}::Element1",
+            dimensions=self.dimension_names,
         )
 
         self.assertIn("../$metadata#ibm.tm1.api.v1.FeederTrace", result["@odata.context"])
@@ -4997,7 +5009,7 @@ class TestCellService(unittest.TestCase):
         result = self.tm1.cells.check_cell_feeders(
             cube_name=self.cube_with_rules_name,
             elements="Element1,Element1,Element1",
-            dimensions=["TM1py_Tests_Cell_Dimension1", "TM1py_Tests_Cell_Dimension2", "TM1py_Tests_Cell_Dimension3"],
+            dimensions=self.dimension_names,
         )
 
         self.assertIn("../$metadata#Collection(ibm.tm1.api.v1.FedCellDescriptor)", result["@odata.context"])
@@ -5005,10 +5017,10 @@ class TestCellService(unittest.TestCase):
     def test_check_feeders_dimensions_string_hierarchy(self):
         result = self.tm1.cells.check_cell_feeders(
             cube_name=self.cube_with_rules_name,
-            elements="TM1py_Tests_Cell_Dimension1::Element1,"
-            "TM1py_Tests_Cell_Dimension2::Element3,"
-            "TM1py_Tests_Cell_Dimension3::Element1",
-            dimensions=["TM1py_Tests_Cell_Dimension1", "TM1py_Tests_Cell_Dimension2", "TM1py_Tests_Cell_Dimension3"],
+            elements=f"{self.dimension_names[0]}::Element1,"
+            f"{self.dimension_names[1]}::Element3,"
+            f"{self.dimension_names[2]}::Element1",
+            dimensions=self.dimension_names,
         )
 
         self.assertIn("../$metadata#Collection(ibm.tm1.api.v1.FedCellDescriptor)", result["@odata.context"])
@@ -5016,10 +5028,10 @@ class TestCellService(unittest.TestCase):
     def test_check_feeders_dimensions_string_multi_hierarchy(self):
         result = self.tm1.cells.check_cell_feeders(
             cube_name=self.cube_with_rules_name,
-            elements="TM1py_Tests_Cell_Dimension1::Element1 && TM1py_Tests_Cell_Dimension1::Element1,"
-            "TM1py_Tests_Cell_Dimension2::Element3,"
-            "TM1py_Tests_Cell_Dimension3::Element1",
-            dimensions=["TM1py_Tests_Cell_Dimension1", "TM1py_Tests_Cell_Dimension2", "TM1py_Tests_Cell_Dimension3"],
+            elements=f"{self.dimension_names[0]}::Element1 && {self.dimension_names[0]}::Element1,"
+            f"{self.dimension_names[1]}::Element3,"
+            f"{self.dimension_names[2]}::Element1",
+            dimensions=self.dimension_names,
         )
 
         self.assertIn("../$metadata#Collection(ibm.tm1.api.v1.FedCellDescriptor)", result["@odata.context"])
@@ -5038,8 +5050,8 @@ class TestCellService(unittest.TestCase):
         result = self.tm1.cells.execute_mdx_csv(mdx, mdx_headers=True)
 
         expected_result = (
-            "[TM1py_Tests_Cell_Dimension2].[TM1py_Tests_Cell_Dimension2],"
-            "[TM1py_Tests_Cell_Dimension1].[TM1py_Tests_Cell_Dimension1],"
+            f"[{self.dimension_names[1]}].[{self.dimension_names[1]}],"
+            f"[{self.dimension_names[0]}].[{self.dimension_names[0]}],"
             "Value\r\n"
             "Element 1,Element 1,245"
         )
@@ -5060,8 +5072,8 @@ class TestCellService(unittest.TestCase):
         result = self.tm1.cells.execute_mdx_csv(mdx, use_blob=True, mdx_headers=True)
 
         expected_result = (
-            '"[TM1py_Tests_Cell_Dimension2].[TM1py_Tests_Cell_Dimension2]",'
-            '"[TM1py_Tests_Cell_Dimension1].[TM1py_Tests_Cell_Dimension1]",'
+            f'"[{self.dimension_names[1]}].[{self.dimension_names[1]}]",'
+            f'"[{self.dimension_names[0]}].[{self.dimension_names[0]}]",'
             '"Value"\r\n'
             '"Element 1","Element 1","245"\r\n'
         )
@@ -5082,8 +5094,8 @@ class TestCellService(unittest.TestCase):
         result = self.tm1.cells.execute_mdx_csv(mdx, use_iterative_json=True, mdx_headers=True)
 
         expected_result = (
-            "[TM1py_Tests_Cell_Dimension2].[TM1py_Tests_Cell_Dimension2],"
-            "[TM1py_Tests_Cell_Dimension1].[TM1py_Tests_Cell_Dimension1],"
+            f"[{self.dimension_names[1]}].[{self.dimension_names[1]}],"
+            f"[{self.dimension_names[0]}].[{self.dimension_names[0]}],"
             "Value\r\n"
             "Element 1,Element 1,245"
         )
@@ -5098,8 +5110,8 @@ class TestCellService(unittest.TestCase):
         )
 
         expected_result = (
-            "[TM1py_Tests_Cell_Dimension2].[TM1py_Tests_Cell_Dimension2],"
-            "[TM1py_Tests_Cell_Dimension1].[TM1py_Tests_Cell_Dimension1],"
+            f"[{self.dimension_names[1]}].[{self.dimension_names[1]}],"
+            f"[{self.dimension_names[0]}].[{self.dimension_names[0]}],"
             "Value\r\n"
             "Element 1,Element 1,245"
         )
@@ -5114,8 +5126,8 @@ class TestCellService(unittest.TestCase):
         )
 
         expected_result = (
-            '"[TM1py_Tests_Cell_Dimension2].[TM1py_Tests_Cell_Dimension2]",'
-            '"[TM1py_Tests_Cell_Dimension1].[TM1py_Tests_Cell_Dimension1]",'
+            f'"[{self.dimension_names[1]}].[{self.dimension_names[1]}]",'
+            f'"[{self.dimension_names[0]}].[{self.dimension_names[0]}]",'
             '"Value"\r\n'
             '"Element 1","Element 1","245"\r\n'
         )
@@ -5130,8 +5142,8 @@ class TestCellService(unittest.TestCase):
         )
 
         expected_result = (
-            "[TM1py_Tests_Cell_Dimension2].[TM1py_Tests_Cell_Dimension2],"
-            "[TM1py_Tests_Cell_Dimension1].[TM1py_Tests_Cell_Dimension1],"
+            f"[{self.dimension_names[1]}].[{self.dimension_names[1]}],"
+            f"[{self.dimension_names[0]}].[{self.dimension_names[0]}],"
             "Value\r\n"
             "Element 1,Element 1,245"
         )
