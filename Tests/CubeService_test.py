@@ -3,6 +3,7 @@ import unittest
 import uuid
 from pathlib import Path
 
+from Tests.Utils import generate_test_uuid
 from TM1py import Dimension, Element, Hierarchy
 from TM1py.Exceptions.Exceptions import TM1pyRestException
 from TM1py.Objects import Cube, Rules
@@ -13,40 +14,49 @@ from .Utils import skip_if_version_higher_or_equal_than, skip_if_version_lower_t
 
 class TestCubeService(unittest.TestCase):
     tm1: TM1Service
-    prefix = "TM1py_Tests_Cube_"
 
-    cube_name = prefix + "some_name"
-    cube_name_to_delete = prefix + "Some_Other_Name"
-    control_cube_name = "}" + prefix + "some_control_cube_name"
-    dimension_names = [prefix + "dimension1", prefix + "dimension2", prefix + "dimension3"]
+    @classmethod
+    def setUpClass(cls):
+        """
+        Establishes a connection to TM1 and defines unique names for the TM1 objects used across all tests
+        """
+        # Connection to TM1
+        cls.config = configparser.ConfigParser()
+        cls.config.read(Path(__file__).parent.joinpath("config.ini"))
+        cls.tm1 = TM1Service(**cls.config["tm1srv01"])
+
+        # Define unique names
+        cls.test_uuid = generate_test_uuid()
+        cls.prefix = "TM1py_Tests_Cube_"
+        cls.cube_name = cls.prefix + "some_name_" + cls.test_uuid
+        cls.cube_name_to_delete = cls.prefix + "Some_Other_Name_" + cls.test_uuid
+        cls.control_cube_name = "}" + cls.prefix + "some_control_cube_name_" + cls.test_uuid
+        cls.dimension_names = [
+            cls.prefix + "dimension1_" + cls.test_uuid,
+            cls.prefix + "dimension2_" + cls.test_uuid,
+            cls.prefix + "dimension3_" + cls.test_uuid,
+        ]
+        # unique rule comment, so that rule searches only find cubes of this test run
+        cls.rule_comment = "find_me_comment_" + cls.test_uuid
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tm1.logout()
 
     def setUp(self):
-
-        # Connection to TM1
-        self.config = configparser.ConfigParser()
-        self.config.read(Path(__file__).parent.joinpath("config.ini"))
-        self.tm1 = TM1Service(**self.config["tm1srv01"])
-
         for dimension_name in self.dimension_names:
             elements = [Element("Element {}".format(str(j)), "Numeric") for j in range(1, 1001)]
             hierarchy = Hierarchy(dimension_name=dimension_name, name=dimension_name, elements=elements)
             dimension = Dimension(dimension_name, [hierarchy])
-            if not self.tm1.dimensions.exists(dimension.name):
-                self.tm1.dimensions.create(dimension)
+            self.tm1.dimensions.update_or_create(dimension)
 
         # Build Cube
-        cube = Cube(self.cube_name, self.dimension_names)
-        if not self.tm1.cubes.exists(self.cube_name):
-            self.tm1.cubes.create(cube)
         c = Cube(self.cube_name, dimensions=self.dimension_names, rules=Rules(""))
         if self.tm1.cubes.exists(c.name):
             self.tm1.cubes.delete(c.name)
         self.tm1.cubes.create(c)
 
         # Build Control Cube
-        control_cube = Cube(self.control_cube_name, self.dimension_names)
-        if not self.tm1.cubes.exists(self.control_cube_name):
-            self.tm1.cubes.create(control_cube)
         c = Cube(self.control_cube_name, dimensions=self.dimension_names, rules=Rules(""))
         if self.tm1.cubes.exists(c.name):
             self.tm1.cubes.delete(c.name)
@@ -57,10 +67,15 @@ class TestCubeService(unittest.TestCase):
         self.assertIsInstance(c, Cube)
         self.assertEqual(c.dimensions, self.dimension_names)
 
-        cubes = self.tm1.cubes.get_all()
-        control_cubes = self.tm1.cubes.get_control_cubes()
-        model_cubes = self.tm1.cubes.get_model_cubes()
-        self.assertEqual(len(cubes), len(control_cubes + model_cubes))
+        # other tests may create or delete cubes in parallel, so compare memberships instead of counts
+        cube_names = {cube.name for cube in self.tm1.cubes.get_all()}
+        control_cube_names = {cube.name for cube in self.tm1.cubes.get_control_cubes()}
+        model_cube_names = {cube.name for cube in self.tm1.cubes.get_model_cubes()}
+        self.assertFalse(control_cube_names & model_cube_names)
+        self.assertIn(self.cube_name, cube_names)
+        self.assertIn(self.cube_name, model_cube_names)
+        self.assertIn(self.control_cube_name, cube_names)
+        self.assertIn(self.control_cube_name, control_cube_names)
 
     def test_update_cube(self):
         c = self.tm1.cubes.get(self.cube_name)
@@ -101,43 +116,40 @@ class TestCubeService(unittest.TestCase):
 
     def test_create_delete_cube(self):
         cube_name = self.cube_name_to_delete
-        # element with index 0 is Sandboxes
-        dimension_names = self.tm1.dimensions.get_all_names()[1:3]
+        # use own dimensions. Other dimensions may be deleted by tests running in parallel
+        dimension_names = self.dimension_names[0:2]
         cube = Cube(cube_name, dimension_names)
 
-        all_cubes_before = self.tm1.cubes.get_all_names()
+        self.assertNotIn(cube_name, self.tm1.cubes.get_all_names())
         self.tm1.cubes.update_or_create(cube)
-        all_cubes_after = self.tm1.cubes.get_all_names()
-        self.assertEqual(len(all_cubes_before) + 1, len(all_cubes_after))
+        self.assertIn(cube_name, self.tm1.cubes.get_all_names())
         self.assertEqual(self.tm1.cubes.get_dimension_names(cube_name), dimension_names)
 
-        all_cubes_before = self.tm1.cubes.get_all_names()
         self.tm1.cubes.delete(cube_name)
-        all_cubes_after = self.tm1.cubes.get_all_names()
-        self.assertEqual(len(all_cubes_before) - 1, len(all_cubes_after))
+        self.assertNotIn(cube_name, self.tm1.cubes.get_all_names())
 
     def test_get_all_names(self):
-        all_cubes_before = self.tm1.cubes.get_all_names()
-        cubes_with_rules = self.tm1.cubes.get_all_names_with_rules()
-        cubes_without_rules = self.tm1.cubes.get_all_names_without_rules()
+        # other tests may create or delete cubes in parallel, so compare memberships instead of counts
+        cubes_with_rules = set(self.tm1.cubes.get_all_names_with_rules())
+        cubes_without_rules = set(self.tm1.cubes.get_all_names_without_rules())
+        self.assertFalse(cubes_with_rules & cubes_without_rules)
+        self.assertIn(self.cube_name, self.tm1.cubes.get_all_names())
+        self.assertIn(self.cube_name, cubes_without_rules)
 
-        self.assertEqual(len(all_cubes_before), len(cubes_with_rules) + len(cubes_without_rules))
+        self.assertIn(self.control_cube_name, self.tm1.cubes.get_all_names())
+        self.assertNotIn(self.control_cube_name, self.tm1.cubes.get_all_names(skip_control_cubes=True))
 
-        self.assertNotEqual(
-            len(self.tm1.cubes.get_all_names()), len(self.tm1.cubes.get_all_names(skip_control_cubes=True))
-        )
-
-        cube_name = self.prefix + "Some_Other_Name"
-        dimension_names = self.tm1.dimensions.get_all_names()[1:3]
+        cube_name = self.cube_name_to_delete
+        dimension_names = self.dimension_names[0:2]
         cube = Cube(cube_name, dimension_names)
         self.tm1.cubes.update_or_create(cube)
-        self.assertEqual(len(cubes_without_rules) + 1, len(self.tm1.cubes.get_all_names_without_rules()))
-        self.assertEqual(len(cubes_with_rules), len(self.tm1.cubes.get_all_names_with_rules()))
+        self.assertIn(cube_name, self.tm1.cubes.get_all_names_without_rules())
+        self.assertNotIn(cube_name, self.tm1.cubes.get_all_names_with_rules())
 
         cube.rules = "SKIPCHECK"
         self.tm1.cubes.update(cube)
-        self.assertEqual(len(cubes_with_rules) + 1, len(self.tm1.cubes.get_all_names_with_rules()))
-        self.assertEqual(len(cubes_without_rules), len(self.tm1.cubes.get_all_names_without_rules()))
+        self.assertIn(cube_name, self.tm1.cubes.get_all_names_with_rules())
+        self.assertNotIn(cube_name, self.tm1.cubes.get_all_names_without_rules())
 
         self.tm1.cubes.delete(cube_name)
 
@@ -344,34 +356,36 @@ class TestCubeService(unittest.TestCase):
 
     def test_search_for_rule_substring_happy_case(self):
         cube = self.tm1.cubes.get(cube_name=self.cube_name)
-        cube.rules = "SKIPCHECK;\n#find_me_comment"
+        cube.rules = "SKIPCHECK;\n#" + self.rule_comment
         self.tm1.cubes.update(cube)
 
-        cubes = self.tm1.cubes.search_for_rule_substring(substring="find_me_comment")
-        self.assertEqual(self.cube_name, cubes[0].name)
+        cubes = self.tm1.cubes.search_for_rule_substring(substring=self.rule_comment)
+        self.assertEqual([self.cube_name], [cube.name for cube in cubes])
 
     def test_search_for_rule_substring_skip_control_cubes_false(self):
         cube = self.tm1.cubes.get(self.control_cube_name)
-        cube.rules = "SKIPCHECK;\n[]=N:1;\n#find_me_comment\nFEEDERS;"
+        cube.rules = "SKIPCHECK;\n[]=N:1;\n#" + self.rule_comment + "\nFEEDERS;"
         self.tm1.cubes.update(cube)
 
-        cubes = self.tm1.cubes.search_for_rule_substring(substring="find_me_comment", skip_control_cubes=False)
-        self.assertEqual(self.control_cube_name, cubes[0].name)
+        cubes = self.tm1.cubes.search_for_rule_substring(substring=self.rule_comment, skip_control_cubes=False)
+        self.assertEqual([self.control_cube_name], [cube.name for cube in cubes])
 
     def test_search_for_rule_substring_space_insensitive(self):
         cube = self.tm1.cubes.get(self.cube_name)
-        cube.rules = "SKIPCHECK;\n[]=N:2;\n#find_me_comment\nFEEDERS;"
+        cube.rules = "SKIPCHECK;\n[]=N:2;\n#" + self.rule_comment + "\nFEEDERS;"
         self.tm1.cubes.update(cube)
 
-        cubes = self.tm1.cubes.search_for_rule_substring(substring="find _me _COMMENT", skip_control_cubes=False)
-        self.assertEqual(self.cube_name, cubes[0].name)
+        cubes = self.tm1.cubes.search_for_rule_substring(
+            substring="find _me _COMMENT_" + self.test_uuid.upper(), skip_control_cubes=False
+        )
+        self.assertEqual([self.cube_name], [cube.name for cube in cubes])
 
     def test_search_for_rule_substring_skip_control_cubes_true(self):
         cube = self.tm1.cubes.get(self.control_cube_name)
-        cube.rules = "SKIPCHECK;\n#find_me_comment"
+        cube.rules = "SKIPCHECK;\n#" + self.rule_comment
         self.tm1.cubes.update(cube)
 
-        cubes = self.tm1.cubes.search_for_rule_substring(substring="find_control_comment", skip_control_cubes=True)
+        cubes = self.tm1.cubes.search_for_rule_substring(substring=self.rule_comment, skip_control_cubes=True)
         self.assertEqual(0, len(cubes))
 
     def test_get_measure_dimension(self):
@@ -405,12 +419,12 @@ class TestCubeService(unittest.TestCase):
             self.tm1.cubes.set_time_dimension(self.cube_name, "Not_A_Dimension_Of_The_Cube")
 
     def tearDown(self):
-        self.tm1.cubes.delete(self.cube_name)
-        if self.tm1.cubes.exists(self.cube_name_to_delete):
-            self.tm1.cubes.delete(self.cube_name_to_delete)
-        for dimension in self.dimension_names:
-            self.tm1.dimensions.delete(dimension)
-        self.tm1.logout()
+        for cube_name in (self.cube_name, self.control_cube_name, self.cube_name_to_delete):
+            if self.tm1.cubes.exists(cube_name):
+                self.tm1.cubes.delete(cube_name)
+        for dimension_name in self.dimension_names:
+            if self.tm1.dimensions.exists(dimension_name):
+                self.tm1.dimensions.delete(dimension_name)
 
 
 if __name__ == "__main__":
