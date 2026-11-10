@@ -5,6 +5,7 @@ from pathlib import Path
 
 from mdxpy import MdxBuilder, Member
 
+from Tests.Utils import generate_test_uuid
 from TM1py.Objects import Cube, Dimension, Element, Hierarchy, Rules, Sandbox
 from TM1py.Services import TM1Service
 
@@ -12,35 +13,45 @@ from TM1py.Services import TM1Service
 class TestSandboxService(unittest.TestCase):
     tm1: TM1Service
 
-    prefix = "TM1py_Tests_Sandbox_"
-    cube_name = prefix + "some_name"
-    dimension_names = [prefix + "dimension1", prefix + "dimension2", prefix + "dimension3"]
-    sandbox_name1 = prefix + "sandbox1"
-    sandbox_name2 = prefix + "sandbox2"
-    sandbox_name3 = prefix + "sandbox3"
+    @classmethod
+    def setUpClass(cls):
+        """
+        Establishes a connection to TM1 and defines unique names for the TM1 objects used across all tests
+        """
+        # Connection to TM1
+        cls.config = configparser.ConfigParser()
+        cls.config.read(Path(__file__).parent.joinpath("config.ini"))
+        cls.tm1 = TM1Service(**cls.config["tm1srv01"])
+
+        # Define unique names
+        test_uuid = generate_test_uuid()
+        cls.prefix = "TM1py_Tests_Sandbox_"
+        cls.cube_name = cls.prefix + "some_name_" + test_uuid
+        cls.dimension_names = [
+            cls.prefix + "dimension1_" + test_uuid,
+            cls.prefix + "dimension2_" + test_uuid,
+            cls.prefix + "dimension3_" + test_uuid,
+        ]
+        cls.sandbox_name1 = cls.prefix + "sandbox1_" + test_uuid
+        cls.sandbox_name2 = cls.prefix + "sandbox2_" + test_uuid
+        cls.sandbox_name3 = cls.prefix + "sandbox3_" + test_uuid
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tm1.logout()
 
     def setUp(self):
-
-        # Connection to TM1
-        self.config = configparser.ConfigParser()
-        self.config.read(Path(__file__).parent.joinpath("config.ini"))
-        self.tm1 = TM1Service(**self.config["tm1srv01"])
-
         for dimension_name in self.dimension_names:
             elements = [Element("Element {}".format(str(j)), "Numeric") for j in range(1, 1001)]
             hierarchy = Hierarchy(dimension_name=dimension_name, name=dimension_name, elements=elements)
             dimension = Dimension(dimension_name, [hierarchy])
-            if not self.tm1.dimensions.exists(dimension.name):
-                self.tm1.dimensions.create(dimension)
+            self.tm1.dimensions.update_or_create(dimension)
 
         # Build Cube
-        cube = Cube(self.cube_name, self.dimension_names)
-        if not self.tm1.cubes.exists(self.cube_name):
-            self.tm1.cubes.create(cube)
-        c = Cube(self.cube_name, dimensions=self.dimension_names, rules=Rules(""))
-        if self.tm1.cubes.exists(c.name):
-            self.tm1.cubes.delete(c.name)
-        self.tm1.cubes.create(c)
+        cube = Cube(self.cube_name, dimensions=self.dimension_names, rules=Rules(""))
+        if self.tm1.cubes.exists(cube.name):
+            self.tm1.cubes.delete(cube.name)
+        self.tm1.cubes.create(cube)
 
         if not self.tm1.sandboxes.exists(self.sandbox_name1):
             self.tm1.sandboxes.create(Sandbox(name=self.sandbox_name1, include_in_sandbox_dimension=True))
@@ -233,10 +244,11 @@ class TestSandboxService(unittest.TestCase):
             if self.tm1.sandboxes.exists(sandbox_name):
                 self.tm1.sandboxes.delete(sandbox_name)
 
-        self.tm1.cubes.delete(self.cube_name)
-        for dimension in self.dimension_names:
-            self.tm1.dimensions.delete(dimension)
-        self.tm1.logout()
+        if self.tm1.cubes.exists(self.cube_name):
+            self.tm1.cubes.delete(self.cube_name)
+        for dimension_name in self.dimension_names:
+            if self.tm1.dimensions.exists(dimension_name):
+                self.tm1.dimensions.delete(dimension_name)
 
 
 if __name__ == "__main__":
