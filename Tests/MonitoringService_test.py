@@ -3,6 +3,8 @@ import unittest
 import warnings
 from pathlib import Path
 
+import pytest
+
 from TM1py.Services import TM1Service
 from TM1py.Utils import case_and_space_insensitive_equals
 
@@ -43,12 +45,18 @@ class TestMonitoringService(unittest.TestCase):
         current_user = self.tm1.security.get_current_user()
         self.assertTrue(self.tm1.monitoring.user_is_active(current_user.name))
 
+    # Affects sessions of other users (e.g. users created by other tests). Must not run in parallel.
+    @pytest.mark.serial
     def test_close_all_sessions(self):
         self.tm1.monitoring.close_all_sessions()
 
+    # Affects other users (e.g. users created by other tests). Must not run in parallel.
+    @pytest.mark.serial
     def test_disconnect_all_users(self):
         self.tm1.monitoring.disconnect_all_users()
 
+    # Cancels running threads of all sessions, including other test workers. Must not run in parallel.
+    @pytest.mark.serial
     @skip_if_version_higher_or_equal_than(version="12.0.0")
     def test_cancel_all_running_threads(self):
         self.tm1.monitoring.cancel_all_running_threads()

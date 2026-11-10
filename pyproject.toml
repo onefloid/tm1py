@@ -56,6 +56,11 @@ include = ["TM1py*"]
 line-length = 120
 target-version = ["py37"]
 
+[tool.pytest.ini_options]
+markers = [
+    "serial: test affects global TM1 server state (e.g. sessions, threads) and must not run in parallel with other tests",
+]
+
 [tool.ruff]
 target-version = "py37"
 
