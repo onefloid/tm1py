@@ -7,6 +7,7 @@ import pandas as pd
 from mdxpy import MdxBuilder, MdxHierarchySet
 from pandas import DataFrame
 
+from Tests.Utils import generate_test_uuid
 from TM1py import Element, ElementAttribute
 from TM1py.Exceptions import TM1pyException, TM1pyRestException
 from TM1py.Objects import Dimension, Hierarchy, Subset
@@ -15,13 +16,6 @@ from TM1py.Services import TM1Service
 
 class TestHierarchyService(unittest.TestCase):
     tm1: TM1Service
-    prefix = "TM1py_Tests_Hierarchy_"
-    dimension_name = prefix + "Some_Name"
-    subset_name = prefix + "Some_Subset"
-
-    region_dimension_name = prefix + "Region"
-    alternative_region_dimension_name = prefix + "Alternative Region"
-    alternative_region_hierarchy_name = prefix + "Alternative Region"
 
     @classmethod
     def setUpClass(cls):
@@ -33,6 +27,16 @@ class TestHierarchyService(unittest.TestCase):
         cls.config = configparser.ConfigParser()
         cls.config.read(Path(__file__).parent.joinpath("config.ini"))
         cls.tm1 = TM1Service(**cls.config["tm1srv01"])
+
+        # Define unique names
+        test_uuid = generate_test_uuid()
+        cls.prefix = "TM1py_Tests_Hierarchy_"
+        cls.dimension_name = cls.prefix + "Some_Name_" + test_uuid
+        cls.subset_name = cls.prefix + "Some_Subset_" + test_uuid
+
+        cls.region_dimension_name = cls.prefix + "Region_" + test_uuid
+        cls.alternative_region_dimension_name = cls.prefix + "Alternative Region_" + test_uuid
+        cls.alternative_region_hierarchy_name = cls.prefix + "Alternative Region_" + test_uuid
 
     @classmethod
     def teardown_class(cls):
